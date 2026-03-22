@@ -35,6 +35,18 @@ Add to your `pyproject.toml`:
 ```toml
 [dependencies]
 propgraph = {path = "../propgraph", develop = true}
+# or with Pydantic API models:
+propgraph = {path = "../propgraph", develop = true, extras = ["api"]}
+```
+
+### Optional: Pydantic API Models
+
+`propgraph.api` provides Pydantic v2 models for validating PropGraph return values.
+Install the extra to use them:
+```bash
+uv pip install -e ".[api]"
+# or
+pip install "propgraph[api]"
 ```
 
 ## Quick Start
@@ -250,6 +262,17 @@ See the `examples/` directory for real-world usage patterns:
 ./bin/examples.sh deps        # Dependency analysis
 ```
 
+## API Contract
+
+`contract.json` in the repo root is a machine-readable description of the complete public API — every class, method signature, parameter type, and return type. It is generated from the source and committed so that breaking changes are visible as diffs in pull requests.
+
+Consuming projects (including AI coding assistants) can read this file to verify they are calling APIs correctly without having to inspect source code.
+
+To regenerate after making API changes:
+```bash
+uv run --extra api python bin/build_contract.py
+```
+
 ## API Reference
 
 ### PropertyGraph Class
@@ -341,38 +364,34 @@ Dict-like interface for properties (accessed via `.props` on graph/node/edge):
 ```
 
 ### Requirements
-- Python 3.10+ (uses match expressions and modern type hints)
-- SQLite 3.7.11+ (for foreign key support)  
+- Python 3.10+
+- SQLite 3.7.11+ (for foreign key support)
 - Zero external runtime dependencies
 - [uv](https://docs.astral.sh/uv/) recommended for development
 
 ### Development Scripts
 - `./bin/test.sh` - Run tests with various options
-- `./bin/examples.sh` - Run examples  
+- `./bin/examples.sh` - Run examples
 - `./bin/dev.sh` - Development utilities (setup, lint, check, etc.)
+- `uv run --extra api python bin/build_contract.py` - Regenerate `contract.json`
+
+### Running Tests with Optional Extras
+```bash
+# Core tests (no extras needed)
+uv run --extra dev pytest
+
+# Including api model tests
+uv run --extra dev --extra api pytest
+```
 
 ### Architecture
 - **`src/propgraph/storage.py`**: SQLite operations and type mapping
-- **`src/propgraph/query.py`**: Query building and lazy evaluation  
+- **`src/propgraph/query.py`**: Query building and lazy evaluation
 - **`src/propgraph/core.py`**: Main API and proxy classes
 
 ### Contributing
 1. Fork the repository
-2. Create a feature branch  
-3. Run `./bin/dev.sh setup` for development environment
-4. Add tests for new functionality
-5. Run `./bin/dev.sh check` to verify all checks pass
-6. Submit a pull request
-in/dev.sh` - Development utilities (setup, lint, check, etc.)
-
-### Architecture
-- **`src/propgraph/storage.py`**: SQLite operations and type mapping
-- **`src/propgraph/query.py`**: Query building and lazy evaluation  
-- **`src/propgraph/core.py`**: Main API and proxy classes
-
-### Contributing
-1. Fork the repository
-2. Create a feature branch  
+2. Create a feature branch
 3. Run `./bin/dev.sh setup` for development environment
 4. Add tests for new functionality
 5. Run `./bin/dev.sh check` to verify all checks pass

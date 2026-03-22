@@ -1,0 +1,1463 @@
+{
+  "propgraph_version": "0.1.0",
+  "description": "Machine-readable PropGraph public API contract. Use this file to verify method names, parameter types, and return types before calling PropGraph from another project.",
+  "classes": {
+    "PropertyGraph": {
+      "import": "from propgraph import PropertyGraph",
+      "alias": "Graph",
+      "description": "SQLite-backed property graph database\n\nExample:\n    # Create graph and add nodes with properties\n    with PropertyGraph() as graph:\n        person = graph.add_node(\"person\", name=\"Alice\", age=30)\n        city = graph.add_node(\"city\", name=\"San Francisco\")\n\n        # Connect them with a relationship\n        lives_in = graph.add_edge(person, \"lives_in\", city, since=2020)\n\n        # Set graph-level metadata\n        graph.props[\"project_name\"] = \"Social Network\"\n        graph.props[\"version\"] = \"1.0\"\n\n        # Query the graph\n        results = list(graph.nodes(\"person\", name=\"Alice\"))\n        schema_version = graph.props[\"schema_version\"]  # Always available\n    # Automatically closed when exiting with block",
+      "constructor": {
+        "params": {
+          "db_path": {
+            "type": "Optional[str]",
+            "default": null
+          },
+          "allowed_base_dir": {
+            "type": "Optional[str]",
+            "default": null
+          }
+        },
+        "returns": "None",
+        "description": "Initialize PropertyGraph\n\nArgs:\n    db_path: Path to database file. Special values:\n        - None: in-memory database (default)\n        - \"\": temporary file (auto-deleted)\n        - \"/path/to/file.db\": persistent database file\n    allowed_base_dir: Optional directory to restrict database files to.\n        If specified, db_path must be within this directory.\n        Use for additional security when paths come from untrusted input.\n\nRaises:\n    ValueError: If db_path contains path traversal or is outside allowed_base_dir\n\nSecurity Note:\n    Database paths are validated to prevent directory traversal attacks.\n    Paths containing \"..\" are rejected. For additional security with\n    untrusted input, specify allowed_base_dir to restrict file locations.\n\nExample:\n    # In-memory database (no file)\n    graph = PropertyGraph()\n\n    # Persistent database\n    graph = PropertyGraph(\"my_graph.db\")\n\n    # Restricted to specific directory (secure mode)\n    graph = PropertyGraph(\"user_123.db\", allowed_base_dir=\"/var/lib/myapp\")"
+      },
+      "properties": {
+        "props": {
+          "type": "PropertyDict",
+          "description": "Dict-like access to graph metadata"
+        }
+      },
+      "methods": {
+        "add_edge": {
+          "params": {
+            "source": {
+              "type": "Union[NodeProxy, int]"
+            },
+            "edge_type": {
+              "type": "str"
+            },
+            "target": {
+              "type": "Union[NodeProxy, int]"
+            },
+            "properties": {
+              "type": "Any",
+              "kind": "**kwargs"
+            }
+          },
+          "returns": "EdgeProxy",
+          "description": "Add an edge between two nodes with properties\n\nExample:\n    friendship = graph.add_edge(user1, \"friends\", user2, since=\"2023-01-01\")"
+        },
+        "add_node": {
+          "params": {
+            "node_type": {
+              "type": "str"
+            },
+            "properties": {
+              "type": "Any",
+              "kind": "**kwargs"
+            }
+          },
+          "returns": "NodeProxy",
+          "description": "Add a node to the graph with properties\n\nExample:\n    user = graph.add_node(\"user\", name=\"Bob\", email=\"bob@example.com\")"
+        },
+        "close": {
+          "params": {},
+          "returns": "None",
+          "description": "Close database connection"
+        },
+        "commit": {
+          "params": {},
+          "returns": "None",
+          "description": "Explicit commit for batch operations"
+        },
+        "edge_count": {
+          "params": {},
+          "returns": "int",
+          "description": "Get total number of edges in the graph\n\nReturns:\n    Number of edges as int"
+        },
+        "edge_types": {
+          "params": {},
+          "returns": "list[str]",
+          "description": "Get list of all distinct edge types in the graph\n\nReturns:\n    List of edge type strings, sorted alphabetically"
+        },
+        "edges": {
+          "params": {
+            "edge_type": {
+              "type": "Optional[str]",
+              "default": null
+            },
+            "properties": {
+              "type": "Any",
+              "kind": "**kwargs"
+            }
+          },
+          "returns": "EdgeIterator",
+          "description": "Start a lazy iterator for edges"
+        },
+        "get_log_level": {
+          "params": {},
+          "returns": "int",
+          "description": "Get current logging level"
+        },
+        "iter_edges": {
+          "params": {
+            "edge_type": {
+              "type": "Optional[str]",
+              "default": null
+            },
+            "limit": {
+              "type": "Optional[int]",
+              "default": null
+            },
+            "properties": {
+              "type": "Any",
+              "kind": "**kwargs"
+            }
+          },
+          "returns": "Any",
+          "description": "Iterator over edges with optional filtering.\n\nThis is a convenience method that wraps the main `edges()` query builder.\n\nArgs:\n    edge_type: Filter by edge type\n    limit: Maximum number of edges to return\n    **properties: Property filters\n\nExample:\n    for friendship in graph.iter_edges(\"friends\", active=True):\n        print(f\"{friendship.src_id} -> {friendship.dst_id}\")"
+        },
+        "node_count": {
+          "params": {},
+          "returns": "int",
+          "description": "Get total number of nodes in the graph\n\nReturns:\n    Number of nodes as int"
+        },
+        "node_types": {
+          "params": {},
+          "returns": "list[str]",
+          "description": "Get list of all distinct node types in the graph\n\nReturns:\n    List of node type strings, sorted alphabetically"
+        },
+        "nodes": {
+          "params": {
+            "node_type": {
+              "type": "Optional[str]",
+              "default": null
+            },
+            "properties": {
+              "type": "Any",
+              "kind": "**kwargs"
+            }
+          },
+          "returns": "NodeIterator",
+          "description": "Start a lazy iterator for nodes (XPath-style)"
+        },
+        "resource_stats": {
+          "params": {},
+          "returns": "dict",
+          "description": "Get resource usage statistics for the graph\n\nReturns dictionary with database size, entity counts, and property counts.\nUseful for monitoring resource consumption and enforcing limits.\n\nReturns:\n    Dictionary with keys:\n    - db_size_bytes: Database file size in bytes (0 for in-memory)\n    - db_size_mb: Database file size in MB (0 for in-memory)\n    - node_count: Total number of nodes\n    - edge_count: Total number of edges\n    - node_property_count: Total properties across all nodes\n    - edge_property_count: Total properties across all edges\n    - graph_property_count: Graph-level property count\n    - total_entities: Sum of nodes and edges\n    - total_properties: Sum of all properties\n\nExample:\n    stats = graph.resource_stats()\n    print(f\"Database size: {stats['db_size_mb']:.2f} MB\")\n    print(f\"Total entities: {stats['total_entities']}\")\n\n    # Enforce limits\n    if stats['node_count'] > MAX_NODES:\n        raise ResourceLimitError(\"Too many nodes\")"
+        },
+        "set_log_level": {
+          "params": {
+            "level": {
+              "type": "int"
+            }
+          },
+          "returns": "None",
+          "description": "Set logging level for all PropGraph operations\n\nArgs:\n    level: logging.DEBUG, logging.INFO, logging.SUMMARY (25), etc.\n\nExample:\n    import logging\n    from propgraph.logging_utils import SUMMARY\n\n    graph.set_log_level(logging.DEBUG)  # Show all SQL queries\n    graph.set_log_level(SUMMARY)        # Token-efficient summaries only"
+        },
+        "timestamp": {
+          "params": {},
+          "returns": "float",
+          "description": "Get graph creation timestamp\n\nReturns:\n    Unix timestamp as float"
+        },
+        "to_json": {
+          "params": {
+            "limit": {
+              "type": "int",
+              "default": 10
+            }
+          },
+          "returns": "dict",
+          "description": "Return graph summary as JSON-serializable dictionary\n\nShows first 'limit' nodes and edges with all their properties, plus graph metadata.\n\nArgs:\n    limit: Maximum number of nodes and edges to include (default: 10)\n\nExample:\n    graph_data = graph.to_json(limit=5)\n    print(json.dumps(graph_data, indent=2))"
+        }
+      }
+    },
+    "NodeProxy": {
+      "import": "from propgraph import NodeProxy",
+      "note": "Returned by PropertyGraph.add_node() and node iterators. Not instantiated directly.",
+      "description": "Lightweight proxy for a node in the graph",
+      "constructor": {
+        "params": {
+          "graph": {
+            "type": "PropertyGraph"
+          },
+          "node_id": {
+            "type": "int"
+          },
+          "node_type": {
+            "type": "str"
+          }
+        },
+        "returns": "None",
+        "description": "Initialize self.  See help(type(self)) for accurate signature."
+      },
+      "properties": {
+        "props": {
+          "type": "PropertyDict",
+          "description": "Dict-like access to node properties"
+        }
+      },
+      "methods": {
+        "timestamp": {
+          "params": {},
+          "returns": "float",
+          "description": "Get node creation timestamp\n\nReturns:\n    Unix timestamp as float"
+        },
+        "to_json": {
+          "params": {},
+          "returns": "dict",
+          "description": "Return node data as JSON-serializable dictionary\n\nReturns:\n    Dictionary with node_id, node_type, and all properties"
+        }
+      }
+    },
+    "EdgeProxy": {
+      "import": "from propgraph import EdgeProxy",
+      "note": "Returned by PropertyGraph.add_edge() and edge iterators. Not instantiated directly.",
+      "description": "Lightweight proxy for an edge in the graph",
+      "constructor": {
+        "params": {
+          "graph": {
+            "type": "PropertyGraph"
+          },
+          "edge_id": {
+            "type": "int"
+          },
+          "edge_type": {
+            "type": "str"
+          },
+          "src_id": {
+            "type": "int"
+          },
+          "dst_id": {
+            "type": "int"
+          }
+        },
+        "returns": "None",
+        "description": "Initialize self.  See help(type(self)) for accurate signature."
+      },
+      "properties": {
+        "props": {
+          "type": "PropertyDict",
+          "description": "Dict-like access to edge properties"
+        }
+      },
+      "methods": {
+        "timestamp": {
+          "params": {},
+          "returns": "float",
+          "description": "Get edge creation timestamp\n\nReturns:\n    Unix timestamp as float"
+        },
+        "to_json": {
+          "params": {},
+          "returns": "dict",
+          "description": "Return edge data as JSON-serializable dictionary\n\nReturns:\n    Dictionary with edge_id, edge_type, src_id, dst_id, and all properties"
+        }
+      }
+    },
+    "NodeIterator": {
+      "import": "from propgraph import NodeIterator",
+      "note": "Returned by PropertyGraph.nodes(). Supports method chaining and iteration.",
+      "description": "Lazy iterator for XPath-style graph traversal",
+      "constructor": {
+        "params": {
+          "query_spec": {
+            "type": "QuerySpec"
+          },
+          "executor": {
+            "type": "Callable"
+          },
+          "factory": {
+            "type": "Callable"
+          },
+          "deleter": {
+            "type": "Callable"
+          }
+        },
+        "returns": "Any",
+        "description": "Initialize self.  See help(type(self)) for accurate signature."
+      },
+      "methods": {
+        "delete": {
+          "params": {},
+          "returns": "'NodeIterator'",
+          "description": "Add DELETE step to query - returns new iterator"
+        },
+        "execute": {
+          "params": {},
+          "returns": "int",
+          "description": "Execute modification operations and return count of affected items"
+        },
+        "filter": {
+          "params": {
+            "type": {
+              "type": "Optional[str]",
+              "default": null
+            },
+            "properties": {
+              "type": "Any",
+              "kind": "**kwargs"
+            }
+          },
+          "returns": "Any",
+          "description": "Filter current result set - returns new iterator"
+        },
+        "incoming": {
+          "params": {
+            "edge_type": {
+              "type": "str"
+            }
+          },
+          "returns": "Any",
+          "description": "Follow incoming edges - returns new iterator"
+        },
+        "limit": {
+          "params": {
+            "count": {
+              "type": "int"
+            }
+          },
+          "returns": "Any",
+          "description": "Limit results - returns new iterator"
+        },
+        "outgoing": {
+          "params": {
+            "edge_type": {
+              "type": "str"
+            }
+          },
+          "returns": "Any",
+          "description": "Follow outgoing edges - returns new iterator"
+        }
+      }
+    },
+    "EdgeIterator": {
+      "import": "from propgraph import EdgeIterator",
+      "note": "Returned by PropertyGraph.edges(). Supports method chaining and iteration.",
+      "description": "Lazy iterator for edge operations",
+      "constructor": {
+        "params": {
+          "query_spec": {
+            "type": "QuerySpec"
+          },
+          "executor": {
+            "type": "Callable"
+          },
+          "factory": {
+            "type": "Callable"
+          },
+          "deleter": {
+            "type": "Callable"
+          }
+        },
+        "returns": "Any",
+        "description": "Initialize self.  See help(type(self)) for accurate signature."
+      },
+      "methods": {
+        "delete": {
+          "params": {},
+          "returns": "'EdgeIterator'",
+          "description": "Add DELETE step to query - returns new iterator"
+        },
+        "execute": {
+          "params": {},
+          "returns": "int",
+          "description": "Execute modification operations and return count of affected edges"
+        },
+        "filter": {
+          "params": {
+            "type": {
+              "type": "Optional[str]",
+              "default": null
+            },
+            "properties": {
+              "type": "Any",
+              "kind": "**kwargs"
+            }
+          },
+          "returns": "Any",
+          "description": "Filter current result set - returns new iterator"
+        },
+        "limit": {
+          "params": {
+            "count": {
+              "type": "int"
+            }
+          },
+          "returns": "'EdgeIterator'",
+          "description": "Limit results - returns new iterator"
+        }
+      }
+    }
+  },
+  "query": {
+    "description": "Declarative query representation. Advanced use only \u2014 most callers use the fluent API on NodeIterator/EdgeIterator instead.",
+    "QueryStep": {
+      "import": "from propgraph import QueryStep",
+      "fields": {
+        "type": {
+          "type": "Literal['SOURCE', 'FILTER', 'TRAVERSE', 'ORDER', 'DELETE']",
+          "description": "Operation type"
+        },
+        "target": {
+          "type": "Optional[str]",
+          "default": null,
+          "description": "For SOURCE: 'all_nodes' or 'all_edges'"
+        },
+        "node_type": {
+          "type": "Optional[str]",
+          "default": null
+        },
+        "edge_type": {
+          "type": "Optional[str]",
+          "default": null
+        },
+        "properties": {
+          "type": "Optional[dict]",
+          "default": null
+        },
+        "direction": {
+          "type": "Literal['out', 'in', 'both']",
+          "default": "both",
+          "description": "For TRAVERSE steps"
+        },
+        "field": {
+          "type": "Optional[str]",
+          "default": null,
+          "description": "For ORDER steps"
+        },
+        "order": {
+          "type": "Optional[Literal['asc', 'desc']]",
+          "default": null,
+          "description": "For ORDER steps"
+        }
+      }
+    },
+    "QuerySpec": {
+      "import": "from propgraph import QuerySpec",
+      "fields": {
+        "steps": {
+          "type": "List[QueryStep]",
+          "default": []
+        },
+        "returning": {
+          "type": "Literal['nodes', 'edges', 'target_nodes', 'source_nodes']",
+          "default": "nodes"
+        },
+        "limit": {
+          "type": "Optional[int]",
+          "default": null
+        }
+      }
+    }
+  },
+  "property_types": {
+    "description": "Python types that may be stored as node/edge/graph property values.",
+    "supported": [
+      "str",
+      "int",
+      "float",
+      "bool",
+      "datetime",
+      "date",
+      "list",
+      "dict"
+    ],
+    "unsupported": [
+      "None  # raises PropertyValueError"
+    ],
+    "storage_types": [
+      "str",
+      "int",
+      "float",
+      "bool",
+      "datetime",
+      "date",
+      "json"
+    ]
+  },
+  "exceptions": {
+    "import": "from propgraph import <ExceptionClass>",
+    "hierarchy_root": "PropGraphError",
+    "classes": {
+      "DatabaseError": {
+        "description": "Low-level database operation failed.\n\nSimilar to SQLAlchemy's DBAPIError - wraps underlying database\nerrors while preserving the original exception and SQL context.",
+        "inherits": [
+          "StatementError"
+        ]
+      },
+      "DoesNotExist": {
+        "description": "Convenience exception similar to Django's DoesNotExist.\n\nCan be used when the specific entity type doesn't matter,\nor for generic \"not found\" scenarios.",
+        "inherits": [
+          "EntityNotFoundError"
+        ]
+      },
+      "EntityError": {
+        "description": "Base class for entity-related errors (nodes and edges).\n\nProvides common context for operations on graph entities.",
+        "inherits": [
+          "PropGraphError"
+        ]
+      },
+      "EntityNotFoundError": {
+        "description": "Entity (node or edge) does not exist in the database.\n\nSimilar to Django's DoesNotExist - indicates the requested entity\ncannot be found. Includes entity type and ID for debugging.",
+        "inherits": [
+          "EntityError"
+        ]
+      },
+      "IntegrityError": {
+        "description": "Database constraint violation.\n\nSimilar to SQLAlchemy's IntegrityError - indicates a constraint\nviolation like foreign key, unique constraint, or check constraint.",
+        "inherits": [
+          "DatabaseError"
+        ]
+      },
+      "InvalidQueryError": {
+        "description": "Query is malformed or uses invalid operations.\n\nIndicates a programming error in query construction.",
+        "inherits": [
+          "QueryError"
+        ]
+      },
+      "PropGraphError": {
+        "description": "Base exception for all PropGraph operations.\n\nSimilar to SQLAlchemy's SQLAlchemyError - provides the root of the exception\nhierarchy and basic context storage."
+      },
+      "PropertyError": {
+        "description": "Base class for property-related operations.\n\nProvides context about which property caused the error.",
+        "inherits": [
+          "EntityError"
+        ]
+      },
+      "PropertyNotFoundError": {
+        "description": "Property does not exist on the specified entity.\n\nIncludes available properties to help with debugging typos and\nunderstanding the entity's structure.\n\nInherits from KeyError for backward compatibility.",
+        "inherits": [
+          "PropertyError",
+          "KeyError"
+        ]
+      },
+      "PropertyValueError": {
+        "description": "Property value is invalid or cannot be stored.\n\nIncludes information about the attempted value and why it's invalid.\n\nInherits from ValueError for backward compatibility.",
+        "inherits": [
+          "PropertyError",
+          "ValueError"
+        ]
+      },
+      "QueryError": {
+        "description": "Base class for query construction and execution errors.\n\nProvides context about the query that failed.",
+        "inherits": [
+          "PropGraphError"
+        ]
+      },
+      "QueryExecutionError": {
+        "description": "Query failed during execution.\n\nSimilar to SQLAlchemy's StatementError but for graph queries.\nIncludes the original exception that caused the failure.",
+        "inherits": [
+          "QueryError"
+        ]
+      },
+      "StatementError": {
+        "description": "Error executing a graph operation or query.\n\nSimilar to SQLAlchemy's StatementError - provides context about the\noperation that failed, including operation type and parameters.",
+        "inherits": [
+          "PropGraphError"
+        ]
+      },
+      "TransactionError": {
+        "description": "Transaction management error.\n\nIndicates problems with transaction state, rollback, or commit operations.",
+        "inherits": [
+          "PropGraphError"
+        ]
+      },
+      "ValidationError": {
+        "description": "Data validation failed.\n\nIndicates that data doesn't meet expected constraints or formats.\nCan include multiple validation failures.",
+        "inherits": [
+          "PropGraphError"
+        ]
+      }
+    }
+  },
+  "api_models": {
+    "description": "Pydantic v2 models for validating PropGraph return values. Requires: pip install 'propgraph[api]'",
+    "models": {
+      "EdgeModel": {
+        "import": "from propgraph.api import EdgeModel",
+        "description": "Validated representation of a PropGraph edge.\n\nMirrors the data returned by :class:`~propgraph.EdgeProxy`.",
+        "json_schema": {
+          "additionalProperties": false,
+          "description": "Validated representation of a PropGraph edge.\n\nMirrors the data returned by :class:`~propgraph.EdgeProxy`.",
+          "properties": {
+            "edge_id": {
+              "description": "Unique integer ID assigned by the database",
+              "title": "Edge Id",
+              "type": "integer"
+            },
+            "edge_type": {
+              "description": "Relationship type label (e.g. 'WORKS_ON', 'FRIENDS')",
+              "title": "Edge Type",
+              "type": "string"
+            },
+            "src_id": {
+              "description": "ID of the source node",
+              "title": "Src Id",
+              "type": "integer"
+            },
+            "dst_id": {
+              "description": "ID of the destination node",
+              "title": "Dst Id",
+              "type": "integer"
+            },
+            "properties": {
+              "type": "object",
+              "additionalProperties": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "format": "date-time",
+                    "type": "string"
+                  },
+                  {
+                    "format": "date",
+                    "type": "string"
+                  },
+                  {
+                    "items": {},
+                    "type": "array"
+                  },
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  }
+                ]
+              },
+              "description": "All stored properties",
+              "title": "Properties"
+            },
+            "created_at": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "description": "Unix timestamp of creation (from EdgeProxy.timestamp())",
+              "title": "Created At"
+            }
+          },
+          "required": [
+            "edge_id",
+            "edge_type",
+            "src_id",
+            "dst_id"
+          ],
+          "title": "EdgeModel",
+          "type": "object"
+        }
+      },
+      "GraphStatsModel": {
+        "import": "from propgraph.api import GraphStatsModel",
+        "description": "Resource usage statistics returned by ``PropertyGraph.resource_stats()``.\n\nAll counts reflect the state at the time of the call.",
+        "json_schema": {
+          "additionalProperties": false,
+          "description": "Resource usage statistics returned by ``PropertyGraph.resource_stats()``.\n\nAll counts reflect the state at the time of the call.",
+          "properties": {
+            "db_size_bytes": {
+              "description": "Database file size in bytes (0 for in-memory graphs)",
+              "title": "Db Size Bytes",
+              "type": "integer"
+            },
+            "db_size_mb": {
+              "description": "Database file size in megabytes (0 for in-memory graphs)",
+              "title": "Db Size Mb",
+              "type": "number"
+            },
+            "node_count": {
+              "description": "Total number of nodes",
+              "title": "Node Count",
+              "type": "integer"
+            },
+            "edge_count": {
+              "description": "Total number of edges",
+              "title": "Edge Count",
+              "type": "integer"
+            },
+            "node_property_count": {
+              "description": "Total properties stored across all nodes",
+              "title": "Node Property Count",
+              "type": "integer"
+            },
+            "edge_property_count": {
+              "description": "Total properties stored across all edges",
+              "title": "Edge Property Count",
+              "type": "integer"
+            },
+            "graph_property_count": {
+              "description": "Number of graph-level metadata properties",
+              "title": "Graph Property Count",
+              "type": "integer"
+            },
+            "total_entities": {
+              "description": "Sum of node_count and edge_count",
+              "title": "Total Entities",
+              "type": "integer"
+            },
+            "total_properties": {
+              "description": "Sum of node, edge, and graph property counts",
+              "title": "Total Properties",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "db_size_bytes",
+            "db_size_mb",
+            "node_count",
+            "edge_count",
+            "node_property_count",
+            "edge_property_count",
+            "graph_property_count",
+            "total_entities",
+            "total_properties"
+          ],
+          "title": "GraphStatsModel",
+          "type": "object"
+        }
+      },
+      "GraphSummaryModel": {
+        "import": "from propgraph.api import GraphSummaryModel",
+        "description": "Full graph summary returned by ``PropertyGraph.to_json()``.\n\nContains graph metadata, a sample of nodes and edges, and totals.",
+        "json_schema": {
+          "$defs": {
+            "EdgeModel": {
+              "additionalProperties": false,
+              "description": "Validated representation of a PropGraph edge.\n\nMirrors the data returned by :class:`~propgraph.EdgeProxy`.",
+              "properties": {
+                "edge_id": {
+                  "description": "Unique integer ID assigned by the database",
+                  "title": "Edge Id",
+                  "type": "integer"
+                },
+                "edge_type": {
+                  "description": "Relationship type label (e.g. 'WORKS_ON', 'FRIENDS')",
+                  "title": "Edge Type",
+                  "type": "string"
+                },
+                "src_id": {
+                  "description": "ID of the source node",
+                  "title": "Src Id",
+                  "type": "integer"
+                },
+                "dst_id": {
+                  "description": "ID of the destination node",
+                  "title": "Dst Id",
+                  "type": "integer"
+                },
+                "properties": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "integer"
+                      },
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "boolean"
+                      },
+                      {
+                        "format": "date-time",
+                        "type": "string"
+                      },
+                      {
+                        "format": "date",
+                        "type": "string"
+                      },
+                      {
+                        "items": {},
+                        "type": "array"
+                      },
+                      {
+                        "additionalProperties": true,
+                        "type": "object"
+                      }
+                    ]
+                  },
+                  "description": "All stored properties",
+                  "title": "Properties"
+                },
+                "created_at": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "description": "Unix timestamp of creation (from EdgeProxy.timestamp())",
+                  "title": "Created At"
+                }
+              },
+              "required": [
+                "edge_id",
+                "edge_type",
+                "src_id",
+                "dst_id"
+              ],
+              "title": "EdgeModel",
+              "type": "object"
+            },
+            "GraphSummaryStatsModel": {
+              "additionalProperties": false,
+              "description": "Pagination summary embedded in ``GraphSummaryModel``.",
+              "properties": {
+                "total_nodes": {
+                  "description": "Total nodes in the graph",
+                  "title": "Total Nodes",
+                  "type": "integer"
+                },
+                "total_edges": {
+                  "description": "Total edges in the graph",
+                  "title": "Total Edges",
+                  "type": "integer"
+                },
+                "nodes_shown": {
+                  "description": "Number of nodes included in this summary",
+                  "title": "Nodes Shown",
+                  "type": "integer"
+                },
+                "edges_shown": {
+                  "description": "Number of edges included in this summary",
+                  "title": "Edges Shown",
+                  "type": "integer"
+                }
+              },
+              "required": [
+                "total_nodes",
+                "total_edges",
+                "nodes_shown",
+                "edges_shown"
+              ],
+              "title": "GraphSummaryStatsModel",
+              "type": "object"
+            },
+            "NodeModel": {
+              "additionalProperties": false,
+              "description": "Validated representation of a PropGraph node.\n\nMirrors the data returned by :class:`~propgraph.NodeProxy`.",
+              "properties": {
+                "node_id": {
+                  "description": "Unique integer ID assigned by the database",
+                  "title": "Node Id",
+                  "type": "integer"
+                },
+                "node_type": {
+                  "description": "Type label (e.g. 'User', 'Product')",
+                  "title": "Node Type",
+                  "type": "string"
+                },
+                "properties": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "integer"
+                      },
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "boolean"
+                      },
+                      {
+                        "format": "date-time",
+                        "type": "string"
+                      },
+                      {
+                        "format": "date",
+                        "type": "string"
+                      },
+                      {
+                        "items": {},
+                        "type": "array"
+                      },
+                      {
+                        "additionalProperties": true,
+                        "type": "object"
+                      }
+                    ]
+                  },
+                  "description": "All stored properties",
+                  "title": "Properties"
+                },
+                "created_at": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "description": "Unix timestamp of creation (from NodeProxy.timestamp())",
+                  "title": "Created At"
+                }
+              },
+              "required": [
+                "node_id",
+                "node_type"
+              ],
+              "title": "NodeModel",
+              "type": "object"
+            }
+          },
+          "additionalProperties": false,
+          "description": "Full graph summary returned by ``PropertyGraph.to_json()``.\n\nContains graph metadata, a sample of nodes and edges, and totals.",
+          "properties": {
+            "metadata": {
+              "additionalProperties": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "format": "date-time",
+                    "type": "string"
+                  },
+                  {
+                    "format": "date",
+                    "type": "string"
+                  },
+                  {
+                    "items": {},
+                    "type": "array"
+                  },
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  }
+                ]
+              },
+              "description": "Graph-level metadata properties",
+              "title": "Metadata",
+              "type": "object"
+            },
+            "nodes": {
+              "description": "Sample of nodes (up to the requested limit)",
+              "items": {
+                "$ref": "#/$defs/NodeModel"
+              },
+              "title": "Nodes",
+              "type": "array"
+            },
+            "edges": {
+              "description": "Sample of edges (up to the requested limit)",
+              "items": {
+                "$ref": "#/$defs/EdgeModel"
+              },
+              "title": "Edges",
+              "type": "array"
+            },
+            "summary": {
+              "$ref": "#/$defs/GraphSummaryStatsModel",
+              "description": "Totals and pagination info"
+            }
+          },
+          "required": [
+            "metadata",
+            "nodes",
+            "edges",
+            "summary"
+          ],
+          "title": "GraphSummaryModel",
+          "type": "object"
+        }
+      },
+      "GraphSummaryStatsModel": {
+        "import": "from propgraph.api import GraphSummaryStatsModel",
+        "description": "Pagination summary embedded in ``GraphSummaryModel``.",
+        "json_schema": {
+          "additionalProperties": false,
+          "description": "Pagination summary embedded in ``GraphSummaryModel``.",
+          "properties": {
+            "total_nodes": {
+              "description": "Total nodes in the graph",
+              "title": "Total Nodes",
+              "type": "integer"
+            },
+            "total_edges": {
+              "description": "Total edges in the graph",
+              "title": "Total Edges",
+              "type": "integer"
+            },
+            "nodes_shown": {
+              "description": "Number of nodes included in this summary",
+              "title": "Nodes Shown",
+              "type": "integer"
+            },
+            "edges_shown": {
+              "description": "Number of edges included in this summary",
+              "title": "Edges Shown",
+              "type": "integer"
+            }
+          },
+          "required": [
+            "total_nodes",
+            "total_edges",
+            "nodes_shown",
+            "edges_shown"
+          ],
+          "title": "GraphSummaryStatsModel",
+          "type": "object"
+        }
+      },
+      "NodeModel": {
+        "import": "from propgraph.api import NodeModel",
+        "description": "Validated representation of a PropGraph node.\n\nMirrors the data returned by :class:`~propgraph.NodeProxy`.",
+        "json_schema": {
+          "additionalProperties": false,
+          "description": "Validated representation of a PropGraph node.\n\nMirrors the data returned by :class:`~propgraph.NodeProxy`.",
+          "properties": {
+            "node_id": {
+              "description": "Unique integer ID assigned by the database",
+              "title": "Node Id",
+              "type": "integer"
+            },
+            "node_type": {
+              "description": "Type label (e.g. 'User', 'Product')",
+              "title": "Node Type",
+              "type": "string"
+            },
+            "properties": {
+              "type": "object",
+              "additionalProperties": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "format": "date-time",
+                    "type": "string"
+                  },
+                  {
+                    "format": "date",
+                    "type": "string"
+                  },
+                  {
+                    "items": {},
+                    "type": "array"
+                  },
+                  {
+                    "additionalProperties": true,
+                    "type": "object"
+                  }
+                ]
+              },
+              "description": "All stored properties",
+              "title": "Properties"
+            },
+            "created_at": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "description": "Unix timestamp of creation (from NodeProxy.timestamp())",
+              "title": "Created At"
+            }
+          },
+          "required": [
+            "node_id",
+            "node_type"
+          ],
+          "title": "NodeModel",
+          "type": "object"
+        }
+      },
+      "PropGraphAPIVersion": {
+        "import": "from propgraph.api import PropGraphAPIVersion",
+        "description": "Version metadata for the PropGraph public API.\n\nEmbed this in downstream projects to record which API version was\ntargeted when the integration was written, enabling change detection.",
+        "json_schema": {
+          "additionalProperties": false,
+          "description": "Version metadata for the PropGraph public API.\n\nEmbed this in downstream projects to record which API version was\ntargeted when the integration was written, enabling change detection.",
+          "properties": {
+            "propgraph_version": {
+              "description": "propgraph package version string (e.g. '0.1.0')",
+              "title": "Propgraph Version",
+              "type": "string"
+            },
+            "api_schema_version": {
+              "default": "1",
+              "description": "Version of this api.py schema module, incremented on breaking changes",
+              "title": "Api Schema Version",
+              "type": "string"
+            }
+          },
+          "required": [
+            "propgraph_version"
+          ],
+          "title": "PropGraphAPIVersion",
+          "type": "object"
+        }
+      },
+      "PropertyGraphConfig": {
+        "import": "from propgraph.api import PropertyGraphConfig",
+        "description": "Parameters accepted by the :class:`~propgraph.PropertyGraph` constructor.\n\nUse to validate configuration before opening a graph, or to document\ngraph instantiation in consuming projects.",
+        "json_schema": {
+          "additionalProperties": false,
+          "description": "Parameters accepted by the :class:`~propgraph.PropertyGraph` constructor.\n\nUse to validate configuration before opening a graph, or to document\ngraph instantiation in consuming projects.",
+          "properties": {
+            "db_path": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "description": "Path to the SQLite database file. None = in-memory (default), '' = auto-deleted temp file, '/path/to/file.db' = persistent file",
+              "title": "Db Path"
+            },
+            "allowed_base_dir": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "description": "Optional directory restriction for db_path. When set, db_path must resolve inside this directory. Raises ValueError for path traversal or out-of-bounds paths.",
+              "title": "Allowed Base Dir"
+            }
+          },
+          "title": "PropertyGraphConfig",
+          "type": "object"
+        }
+      },
+      "QuerySpecModel": {
+        "import": "from propgraph.api import QuerySpecModel",
+        "description": "Validated representation of a :class:`~propgraph.QuerySpec`.\n\nMirrors ``QuerySpec`` (a ``dataclass``) with full Pydantic validation.",
+        "json_schema": {
+          "$defs": {
+            "QueryStepModel": {
+              "additionalProperties": false,
+              "description": "Validated representation of a single :class:`~propgraph.QueryStep`.\n\nMirrors ``QueryStep`` (a ``dataclass``) with full Pydantic validation.",
+              "properties": {
+                "type": {
+                  "description": "Operation type",
+                  "enum": [
+                    "SOURCE",
+                    "FILTER",
+                    "TRAVERSE",
+                    "ORDER",
+                    "DELETE"
+                  ],
+                  "title": "Type",
+                  "type": "string"
+                },
+                "target": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "description": "For SOURCE steps: 'all_nodes' or 'all_edges'",
+                  "title": "Target"
+                },
+                "node_type": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "description": "For FILTER steps: restrict to this node type",
+                  "title": "Node Type"
+                },
+                "edge_type": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "description": "For FILTER/TRAVERSE steps: restrict to this edge type",
+                  "title": "Edge Type"
+                },
+                "properties": {
+                  "anyOf": [
+                    {
+                      "additionalProperties": true,
+                      "type": "object"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "description": "For FILTER steps: property equality filters",
+                  "title": "Properties"
+                },
+                "direction": {
+                  "default": "both",
+                  "description": "For TRAVERSE steps: traversal direction",
+                  "enum": [
+                    "out",
+                    "in",
+                    "both"
+                  ],
+                  "title": "Direction",
+                  "type": "string"
+                },
+                "field": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "description": "For ORDER steps: field name to sort by",
+                  "title": "Field"
+                },
+                "order": {
+                  "anyOf": [
+                    {
+                      "enum": [
+                        "asc",
+                        "desc"
+                      ],
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "default": null,
+                  "description": "For ORDER steps: sort direction",
+                  "title": "Order"
+                }
+              },
+              "required": [
+                "type"
+              ],
+              "title": "QueryStepModel",
+              "type": "object"
+            }
+          },
+          "additionalProperties": false,
+          "description": "Validated representation of a :class:`~propgraph.QuerySpec`.\n\nMirrors ``QuerySpec`` (a ``dataclass``) with full Pydantic validation.",
+          "properties": {
+            "steps": {
+              "description": "Ordered sequence of query steps",
+              "items": {
+                "$ref": "#/$defs/QueryStepModel"
+              },
+              "title": "Steps",
+              "type": "array"
+            },
+            "returning": {
+              "default": "nodes",
+              "description": "What entity type to return: 'nodes' from node queries, 'edges' from edge queries, 'target_nodes' after outgoing traversal, 'source_nodes' after incoming traversal",
+              "enum": [
+                "nodes",
+                "edges",
+                "target_nodes",
+                "source_nodes"
+              ],
+              "title": "Returning",
+              "type": "string"
+            },
+            "limit": {
+              "anyOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "description": "Maximum number of results to return",
+              "title": "Limit"
+            }
+          },
+          "title": "QuerySpecModel",
+          "type": "object"
+        }
+      },
+      "QueryStepModel": {
+        "import": "from propgraph.api import QueryStepModel",
+        "description": "Validated representation of a single :class:`~propgraph.QueryStep`.\n\nMirrors ``QueryStep`` (a ``dataclass``) with full Pydantic validation.",
+        "json_schema": {
+          "additionalProperties": false,
+          "description": "Validated representation of a single :class:`~propgraph.QueryStep`.\n\nMirrors ``QueryStep`` (a ``dataclass``) with full Pydantic validation.",
+          "properties": {
+            "type": {
+              "description": "Operation type",
+              "enum": [
+                "SOURCE",
+                "FILTER",
+                "TRAVERSE",
+                "ORDER",
+                "DELETE"
+              ],
+              "title": "Type",
+              "type": "string"
+            },
+            "target": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "description": "For SOURCE steps: 'all_nodes' or 'all_edges'",
+              "title": "Target"
+            },
+            "node_type": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "description": "For FILTER steps: restrict to this node type",
+              "title": "Node Type"
+            },
+            "edge_type": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "description": "For FILTER/TRAVERSE steps: restrict to this edge type",
+              "title": "Edge Type"
+            },
+            "properties": {
+              "anyOf": [
+                {
+                  "additionalProperties": true,
+                  "type": "object"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "description": "For FILTER steps: property equality filters",
+              "title": "Properties"
+            },
+            "direction": {
+              "default": "both",
+              "description": "For TRAVERSE steps: traversal direction",
+              "enum": [
+                "out",
+                "in",
+                "both"
+              ],
+              "title": "Direction",
+              "type": "string"
+            },
+            "field": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "description": "For ORDER steps: field name to sort by",
+              "title": "Field"
+            },
+            "order": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "asc",
+                    "desc"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "default": null,
+              "description": "For ORDER steps: sort direction",
+              "title": "Order"
+            }
+          },
+          "required": [
+            "type"
+          ],
+          "title": "QueryStepModel",
+          "type": "object"
+        }
+      }
+    }
+  }
+}

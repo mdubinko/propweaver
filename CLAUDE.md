@@ -164,7 +164,7 @@ with PropertyGraph("my_graph.db") as graph:
 ```python
 # Query nodes with filtering
 for user in graph.nodes("User", active=True):
-    print(f"Active user: {user.prop('name')}")
+    print(f"Active user: {user.props['name']}")
 
 # Query edges with filtering
 for edge in graph.edges("WORKS_ON", role="Lead"):
@@ -226,26 +226,28 @@ with graph._storage.transaction():
 
 ```python
 # Individual node/edge property updates
-user.set_prop("last_login", "2023-12-01")
-edge.set_prop("strength", 0.85)
+user.props["last_login"] = "2023-12-01"
+edge.props["strength"] = 0.85
 
-# Chainable property updates
-user.set_prop("name", "Alice Smith").set_prop("verified", True).set_prop("score", 95)
+# Batch updates
+user.props.update({"name": "Alice Smith", "verified": True, "score": 95})
 
 # Reading properties
-name = user.prop("name")
-all_props = user.get_properties()  # Returns dict of all properties
+name = user.props["name"]
+name = user.props.get("name")        # Returns None if missing (no exception)
+all_props = user.props.copy()        # Returns regular dict of all properties
 ```
 
 ### Graph Metadata
 
 ```python
 # Set graph-level properties
-graph.set_prop("schema_version", 2).set_prop("created_by", "migration_script")
+graph.props["schema_version"] = 2
+graph.props["created_by"] = "migration_script"
 
 # Read graph metadata
-version = graph.prop("schema_version")  # Always available
-created = graph.prop("created_at")      # Timestamp when graph was created
+version = graph.props["schema_version"]   # Always available
+version = graph.props.get("schema_version")  # Safe read with default None
 ```
 
 ### Schema Inspection
@@ -359,9 +361,9 @@ except Exception as e:
 from propgraph import PropertyGraph, NodeProxy, EdgeProxy
 
 def process_user(user: NodeProxy) -> None:
-    name: str = user.prop("name")
-    age: int = user.prop("age") or 0
-    
+    name: str = user.props["name"]
+    age: int = user.props.get("age") or 0
+
 def create_relationship(graph: PropertyGraph, user1: NodeProxy, user2: NodeProxy) -> EdgeProxy:
     return graph.add_edge(user1, "FRIENDS", user2, created=datetime.now())
 ```
@@ -369,6 +371,19 @@ def create_relationship(graph: PropertyGraph, user1: NodeProxy, user2: NodeProxy
 ## Common Use Cases
 
 Look in the examples/ directory for some common usage patterns.
+
+## API Contract
+
+`contract.json` in the repo root is a machine-readable description of the complete public API. It is the primary reference for other Claude Code instances and consuming projects to verify they are calling PropGraph APIs correctly.
+
+**Regenerate after any API change:**
+```bash
+uv run --extra api python bin/build_contract.py
+```
+
+**Bump `propgraph_version` in `src/propgraph/__init__.py` when making compatibility-breaking changes** (removed methods, renamed parameters, changed return types). This signals to consumers that they need to re-verify their usage against the updated contract.
+
+Non-breaking additions (new methods, new optional parameters) do not require a version bump but the contract should still be regenerated and committed.
 
 ## Integration with Other Projects
 

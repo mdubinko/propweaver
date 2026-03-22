@@ -12,8 +12,6 @@ from __future__ import annotations
 import logging
 from typing import Any, Optional, Protocol, Union
 
-from typing_extensions import Self
-
 from .exceptions import (
     EntityNotFoundError,
     InvalidQueryError,
@@ -404,7 +402,7 @@ class PropertyGraph:
         """Close database connection"""
         self._storage.close()
 
-    def __enter__(self) -> Self:
+    def __enter__(self) -> "PropertyGraph":
         """Context manager entry"""
         return self
 
