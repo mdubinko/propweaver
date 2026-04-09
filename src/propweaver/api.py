@@ -1,17 +1,17 @@
 """
-PropGraph Public API Definition
+PropWeaver Public API Definition
 
-Pydantic models describing the complete public PropGraph API. Intended for use
+Pydantic models describing the complete public PropWeaver API. Intended for use
 by downstream projects to:
 
-- Know the exact shape of data returned by PropGraph operations
-- Validate PropGraph output against expected types
+- Know the exact shape of data returned by PropWeaver operations
+- Validate PropWeaver output against expected types
 - Detect breaking API changes across versions
 
 Usage in consuming projects::
 
-    from propgraph import PropertyGraph
-    from propgraph.api import NodeModel, EdgeModel, GraphStatsModel
+    from propweaver import PropertyGraph
+    from propweaver.api import NodeModel, EdgeModel, GraphStatsModel
 
     with PropertyGraph("my_graph.db") as graph:
         node = graph.add_node("User", name="Alice", age=30)
@@ -20,7 +20,7 @@ Usage in consuming projects::
 
 Requires pydantic v2::
 
-    pip install "propgraph[api]"
+    pip install "propweaver[api]"
 """
 
 from __future__ import annotations
@@ -47,9 +47,9 @@ StorageType = Literal["str", "int", "float", "bool", "datetime", "date", "json"]
 
 
 class NodeModel(BaseModel):
-    """Validated representation of a PropGraph node.
+    """Validated representation of a PropWeaver node.
 
-    Mirrors the data returned by :class:`~propgraph.NodeProxy`.
+    Mirrors the data returned by :class:`~propweaver.NodeProxy`.
     """
 
     model_config = ConfigDict(extra="forbid")
@@ -63,7 +63,7 @@ class NodeModel(BaseModel):
 
     @classmethod
     def from_proxy(cls, proxy: Any, include_timestamp: bool = False) -> "NodeModel":
-        """Build a NodeModel from a live :class:`~propgraph.NodeProxy`.
+        """Build a NodeModel from a live :class:`~propweaver.NodeProxy`.
 
         Args:
             proxy: A ``NodeProxy`` instance returned by the graph.
@@ -95,9 +95,9 @@ class NodeModel(BaseModel):
 
 
 class EdgeModel(BaseModel):
-    """Validated representation of a PropGraph edge.
+    """Validated representation of a PropWeaver edge.
 
-    Mirrors the data returned by :class:`~propgraph.EdgeProxy`.
+    Mirrors the data returned by :class:`~propweaver.EdgeProxy`.
     """
 
     model_config = ConfigDict(extra="forbid")
@@ -113,7 +113,7 @@ class EdgeModel(BaseModel):
 
     @classmethod
     def from_proxy(cls, proxy: Any, include_timestamp: bool = False) -> "EdgeModel":
-        """Build an EdgeModel from a live :class:`~propgraph.EdgeProxy`.
+        """Build an EdgeModel from a live :class:`~propweaver.EdgeProxy`.
 
         Args:
             proxy: An ``EdgeProxy`` instance returned by the graph.
@@ -217,7 +217,7 @@ class GraphSummaryModel(BaseModel):
 
 
 class QueryStepModel(BaseModel):
-    """Validated representation of a single :class:`~propgraph.QueryStep`.
+    """Validated representation of a single :class:`~propweaver.QueryStep`.
 
     Mirrors ``QueryStep`` (a ``dataclass``) with full Pydantic validation.
     """
@@ -258,7 +258,7 @@ class QueryStepModel(BaseModel):
 
 
 class QuerySpecModel(BaseModel):
-    """Validated representation of a :class:`~propgraph.QuerySpec`.
+    """Validated representation of a :class:`~propweaver.QuerySpec`.
 
     Mirrors ``QuerySpec`` (a ``dataclass``) with full Pydantic validation.
     """
@@ -285,7 +285,7 @@ class QuerySpecModel(BaseModel):
 
 
 class PropertyGraphConfig(BaseModel):
-    """Parameters accepted by the :class:`~propgraph.PropertyGraph` constructor.
+    """Parameters accepted by the :class:`~propweaver.PropertyGraph` constructor.
 
     Use to validate configuration before opening a graph, or to document
     graph instantiation in consuming projects.
@@ -314,8 +314,8 @@ class PropertyGraphConfig(BaseModel):
 # ─── API Version Manifest ─────────────────────────────────────────────────────
 
 
-class PropGraphAPIVersion(BaseModel):
-    """Version metadata for the PropGraph public API.
+class PropWeaverAPIVersion(BaseModel):
+    """Version metadata for the PropWeaver public API.
 
     Embed this in downstream projects to record which API version was
     targeted when the integration was written, enabling change detection.
@@ -323,8 +323,8 @@ class PropGraphAPIVersion(BaseModel):
 
     model_config = ConfigDict(extra="forbid")
 
-    propgraph_version: str = Field(
-        description="propgraph package version string (e.g. '0.1.0')"
+    propweaver_version: str = Field(
+        description="propweaver package version string (e.g. '0.2.1')"
     )
     api_schema_version: str = Field(
         default="1",
@@ -335,8 +335,8 @@ class PropGraphAPIVersion(BaseModel):
 #: Current API schema version — bump when making breaking changes to this module.
 API_SCHEMA_VERSION = "1"
 
-#: Convenience constant for constructing :class:`PropGraphAPIVersion` records.
-CURRENT_API_VERSION = PropGraphAPIVersion(
-    propgraph_version="0.1.0",
+#: Convenience constant for constructing :class:`PropWeaverAPIVersion` records.
+CURRENT_API_VERSION = PropWeaverAPIVersion(
+    propweaver_version="0.2.1",
     api_schema_version=API_SCHEMA_VERSION,
 )

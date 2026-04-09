@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Dependency Analysis Example for PropGraph
+Dependency Analysis Example for PropWeaver
 
 Demonstrates how to model and analyze file dependencies, imports, and project structure.
 """
@@ -11,7 +11,7 @@ from pathlib import Path
 # Add src to Python path for examples
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from propgraph import PropertyGraph
+from propweaver import PropertyGraph
 
 
 def main():

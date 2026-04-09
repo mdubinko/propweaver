@@ -1,5 +1,5 @@
 """
-Tests for PropGraph CRUD operations.
+Tests for PropWeaver CRUD operations.
 """
 
 from datetime import datetime

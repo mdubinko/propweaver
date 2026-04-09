@@ -1,19 +1,19 @@
-# PropGraph Architecture Documentation
+# PropWeaver Architecture Documentation
 
-Welcome to PropGraph's comprehensive architecture guides! This documentation explains the "why" behind PropGraph's design, how it works, and how to work effectively with it (especially with AI tools).
+Welcome to PropWeaver's comprehensive architecture guides! This documentation explains the "why" behind PropWeaver's design, how it works, and how to work effectively with it (especially with AI tools).
 
 ## 📚 Quick Navigation
 
-- **Want to understand PropGraph's design?** → [ARCHITECTURE.md](ARCHITECTURE.md)
+- **Want to understand PropWeaver's design?** → [ARCHITECTURE.md](ARCHITECTURE.md)
 - **Want to understand why a specific decision was made?** → [DESIGN_DECISIONS.md](DESIGN_DECISIONS.md)
-- **Using AI tools to work on PropGraph?** → [AI_COLLABORATION.md](AI_COLLABORATION.md)
+- **Using AI tools to work on PropWeaver?** → [AI_COLLABORATION.md](AI_COLLABORATION.md)
 - **Updating or maintaining these guides?** → [WALKTHROUGH_WHYS.md](WALKTHROUGH_WHYS.md)
 
 ---
 
 ## 🎯 By Role
 
-### Student Learning PropGraph
+### Student Learning PropWeaver
 1. Read ARCHITECTURE.md (start: Foundation + Three-Layer Architecture)
 2. Read relevant sections of DESIGN_DECISIONS.md
 3. Look at examples/ directory
@@ -47,7 +47,7 @@ Welcome to PropGraph's comprehensive architecture guides! This documentation exp
 **Best for**: Understanding the "big picture" and how things fit together
 
 **Key sections**:
-- Foundation: What is PropGraph?
+- Foundation: What is PropWeaver?
 - The Three-Layer Architecture
 - Core Design Patterns
 - Design for AI Collaboration (key section!)
@@ -80,7 +80,7 @@ Welcome to PropGraph's comprehensive architecture guides! This documentation exp
 **Best for**: Developers using AI assistants (Claude Code, ChatGPT, etc.)
 
 **Key sections**:
-- Why PropGraph works well with AI tools
+- Why PropWeaver works well with AI tools
 - Getting AI oriented (orientation sequence)
 - Effective prompting patterns (6 patterns)
 - Code review checklist for AI changes
@@ -113,7 +113,7 @@ Welcome to PropGraph's comprehensive architecture guides! This documentation exp
 
 Throughout these architecture guides, code snippets are presented with specific conventions to aid understanding:
 
-- **Usage Examples:** Code demonstrating how to use PropGraph's public API will be prefixed with `## EXAMPLE` within the code block. These are typically self-contained and runnable by a user.
+- **Usage Examples:** Code demonstrating how to use PropWeaver's public API will be prefixed with `## EXAMPLE` within the code block. These are typically self-contained and runnable by a user.
 
 ```python
 ## EXAMPLE
@@ -121,7 +121,7 @@ Throughout these architecture guides, code snippets are presented with specific 
 graph.add_node("User", name="Alice")
 ```
 
-- **Internal Excerpts:** Code snippets from PropGraph's internal implementation, used to illustrate architectural patterns or design decisions, will be surrounded by a line containing only `...`. These are not typically runnable on their own, but show patterns from within the source code.
+- **Internal Excerpts:** Code snippets from PropWeaver's internal implementation, used to illustrate architectural patterns or design decisions, will be surrounded by a line containing only `...`. These are not typically runnable on their own, but show patterns from within the source code.
 
 ```python
 ...

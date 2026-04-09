@@ -1,5 +1,5 @@
 """
-PropGraph exception hierarchy following SQLAlchemy patterns.
+PropWeaver exception hierarchy following SQLAlchemy patterns.
 
 Provides structured exceptions with rich context for debugging and error handling.
 Follows established Python database library conventions for consistency.
@@ -8,9 +8,9 @@ Follows established Python database library conventions for consistency.
 from typing import Any, Dict, List, Optional, Union
 
 
-class PropGraphError(Exception):
+class PropWeaverError(Exception):
     """
-    Base exception for all PropGraph operations.
+    Base exception for all PropWeaver operations.
 
     Similar to SQLAlchemy's SQLAlchemyError - provides the root of the exception
     hierarchy and basic context storage.
@@ -23,7 +23,7 @@ class PropGraphError(Exception):
             setattr(self, key, value)
 
 
-class StatementError(PropGraphError):
+class StatementError(PropWeaverError):
     """
     Error executing a graph operation or query.
 
@@ -45,7 +45,7 @@ class StatementError(PropGraphError):
         super().__init__(message, operation=operation, params=params, orig=orig)
 
 
-class EntityError(PropGraphError):
+class EntityError(PropWeaverError):
     """
     Base class for entity-related errors (nodes and edges).
 
@@ -167,7 +167,7 @@ class PropertyValueError(PropertyError, ValueError):
         )
 
 
-class QueryError(PropGraphError):
+class QueryError(PropWeaverError):
     """
     Base class for query construction and execution errors.
 
@@ -255,7 +255,7 @@ class IntegrityError(DatabaseError):
     pass
 
 
-class TransactionError(PropGraphError):
+class TransactionError(PropWeaverError):
     """
     Transaction management error.
 
@@ -268,7 +268,7 @@ class TransactionError(PropGraphError):
         super().__init__(message, transaction_state=transaction_state)
 
 
-class ValidationError(PropGraphError):
+class ValidationError(PropWeaverError):
     """
     Data validation failed.
 

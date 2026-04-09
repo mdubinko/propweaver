@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from propgraph import PropertyGraph
+from propweaver import PropertyGraph
 
 
 def test_resource_stats_in_memory():

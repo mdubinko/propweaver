@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from propgraph import PropertyGraph
+from propweaver import PropertyGraph
 
 
 class TestPathTraversalPrevention:

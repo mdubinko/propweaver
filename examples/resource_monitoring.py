@@ -6,7 +6,7 @@ Demonstrates how to use resource_stats() to monitor database
 size and entity counts, useful for enforcing limits in production.
 """
 
-from propgraph import PropertyGraph
+from propweaver import PropertyGraph
 
 
 def format_bytes(bytes_val):

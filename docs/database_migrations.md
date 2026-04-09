@@ -348,4 +348,4 @@ def performance_comparison():
 
 ## Example Migration Implementation
 
-See `src/propgraph/core.py` for the base PropertyGraph class that supports this migration system.
+See `src/propweaver/core.py` for the base PropertyGraph class that supports this migration system.

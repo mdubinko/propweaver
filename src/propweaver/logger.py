@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-PropGraph logging utilities with custom SUMMARY level.
+PropWeaver logging utilities with custom SUMMARY level.
 
 Provides token-efficient logging for both tests and main application.
 SUMMARY level (25) sits between INFO and WARNING for emoji-rich summaries.
@@ -47,10 +47,10 @@ class EmojiFormatter(logging.Formatter):
             return super().format(record)
 
 
-class PropGraphLogger:
-    """Centralized logger for PropGraph with level control and SQL debugging"""
+class PropWeaverLogger:
+    """Centralized logger for PropWeaver with level control and SQL debugging"""
 
-    _instance: Optional["PropGraphLogger"] = None
+    _instance: Optional["PropWeaverLogger"] = None
     _logger: Optional[logging.Logger] = None
     _level: int = logging.INFO
 
@@ -64,8 +64,8 @@ class PropGraphLogger:
             self._setup_logger()
 
     def _setup_logger(self):
-        """Set up the main PropGraph logger"""
-        self._logger = logging.getLogger("propgraph")
+        """Set up the main PropWeaver logger"""
+        self._logger = logging.getLogger("propweaver")
         self._logger.handlers.clear()  # Clear any existing handlers
 
         # Default to console output
@@ -78,7 +78,7 @@ class PropGraphLogger:
         self._logger.propagate = False  # Don't propagate to root logger
 
     def set_level(self, level: int):
-        """Set logging level for all PropGraph operations"""
+        """Set logging level for all PropWeaver operations"""
         self._level = level
         if self._logger:
             self._logger.setLevel(level)
@@ -144,7 +144,7 @@ class PropGraphLogger:
 
 
 # Global logger instance
-_pg_logger = PropGraphLogger()
+_pg_logger = PropWeaverLogger()
 
 
 class DetailedFormatter(logging.Formatter):
@@ -156,34 +156,34 @@ class DetailedFormatter(logging.Formatter):
         )
 
 
-def get_logger() -> PropGraphLogger:
-    """Get the global PropGraph logger instance"""
+def get_logger() -> PropWeaverLogger:
+    """Get the global PropWeaver logger instance"""
     return _pg_logger
 
 
 def set_log_level(level: int):
-    """Set the global PropGraph logging level"""
+    """Set the global PropWeaver logging level"""
     _pg_logger.set_level(level)
 
 
 def get_log_level() -> int:
-    """Get the current PropGraph logging level"""
+    """Get the current PropWeaver logging level"""
     return _pg_logger.get_level()
 
 
 # Legacy function for backward compatibility
 def setup_logger(
-    name: str = "propgraph",
+    name: str = "propweaver",
     level: int = logging.INFO,
     token_efficient: bool = False,
     stream: Optional = None,
 ) -> logging.Logger:
     """
     Legacy function - use get_logger() instead.
-    Set up a logger with PropGraph conventions.
+    Set up a logger with PropWeaver conventions.
 
     Args:
-        name: Logger name (default: 'propgraph')
+        name: Logger name (default: 'propweaver')
         level: Logging level (default: INFO)
         token_efficient: Use emoji formatter for token efficiency (default: False)
         stream: Output stream (default: sys.stdout)
@@ -197,7 +197,7 @@ def setup_logger(
     return _pg_logger.logger
 
 
-def get_test_logger(level: int = logging.INFO, token_efficient: bool = False) -> PropGraphLogger:
+def get_test_logger(level: int = logging.INFO, token_efficient: bool = False) -> PropWeaverLogger:
     """
     Get a logger configured for test output.
 
@@ -206,7 +206,7 @@ def get_test_logger(level: int = logging.INFO, token_efficient: bool = False) ->
         token_efficient: Use emoji formatter without timestamps
 
     Returns:
-        PropGraph logger configured for test output
+        PropWeaver logger configured for test output
     """
     _pg_logger.set_level(level)
     if token_efficient:
@@ -214,7 +214,7 @@ def get_test_logger(level: int = logging.INFO, token_efficient: bool = False) ->
     return _pg_logger
 
 
-def get_app_logger(level: int = logging.INFO) -> PropGraphLogger:
+def get_app_logger(level: int = logging.INFO) -> PropWeaverLogger:
     """
     Get a logger configured for main application.
 
@@ -222,14 +222,14 @@ def get_app_logger(level: int = logging.INFO) -> PropGraphLogger:
         level: Logging level
 
     Returns:
-        PropGraph logger configured for application use
+        PropWeaver logger configured for application use
     """
     _pg_logger.set_level(level)
     return _pg_logger
 
 
 # Convenience function for common test usage patterns
-def configure_test_output(brief: bool = False, suppress_warnings: bool = True) -> PropGraphLogger:
+def configure_test_output(brief: bool = False, suppress_warnings: bool = True) -> PropWeaverLogger:
     """
     Configure test output for common usage patterns.
 
@@ -238,7 +238,7 @@ def configure_test_output(brief: bool = False, suppress_warnings: bool = True) -
         suppress_warnings: Suppress Python warnings during tests
 
     Returns:
-        Configured PropGraph logger
+        Configured PropWeaver logger
     """
     if suppress_warnings:
         import warnings

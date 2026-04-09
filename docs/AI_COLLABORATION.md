@@ -1,10 +1,10 @@
-# Working with AI Tools on PropGraph
+# Working with AI Tools on PropWeaver
 
-This guide explains how to effectively collaborate with AI-assisted development tools (like Claude Code) on the PropGraph codebase. It covers prompting strategies, review practices, and workflows that work well with the codebase's architecture.
+This guide explains how to effectively collaborate with AI-assisted development tools (like Claude Code) on the PropWeaver codebase. It covers prompting strategies, review practices, and workflows that work well with the codebase's architecture.
 
 ## Table of Contents
 
-1. [Why PropGraph Works Well with AI Tools](#why-propgraph-works-well-with-ai-tools)
+1. [Why PropWeaver Works Well with AI Tools](#why-propweaver-works-well-with-ai-tools)
 2. [Getting AI Oriented to the Codebase](#getting-ai-oriented-to-the-codebase)
 3. [Effective Prompting Patterns](#effective-prompting-patterns)
 4. [How the Architecture Helps (and Constrains) AI](#how-the-architecture-helps-and-constrains-ai)
@@ -15,9 +15,9 @@ This guide explains how to effectively collaborate with AI-assisted development 
 
 ---
 
-## Why PropGraph Works Well with AI Tools
+## Why PropWeaver Works Well with AI Tools
 
-PropGraph was deliberately designed with AI collaboration in mind. Understanding why helps you work more effectively with AI tools.
+PropWeaver was deliberately designed with AI collaboration in mind. Understanding why helps you work more effectively with AI tools.
 
 ### 1. Zero Dependencies = Reduced Hallucination
 
@@ -26,7 +26,7 @@ AI tools hallucinate less when they don't have to reason about external library 
 
 ```python
 ## EXAMPLE
-# PropGraph (AI can understand this)
+# PropWeaver (AI can understand this)
 import json
 data = json.loads(stored_value)
 
@@ -653,7 +653,7 @@ order_by() should use the same pattern."
 
 ## Using CLAUDE.md and TODO.md
 
-PropGraph has two special files for AI collaboration:
+PropWeaver has two special files for AI collaboration:
 
 ### CLAUDE.md
 
@@ -747,7 +747,7 @@ First, [ask for what you want first]:
 
 ## Example: Adding a Real Feature
 
-Here's a real example of working with AI on PropGraph.
+Here's a real example of working with AI on PropWeaver.
 
 ### Scenario: Add `limit()` to Queries
 
@@ -850,7 +850,7 @@ git commit -m "Add limit() method to query iterators"
 
 ---
 
-## Summary: Working Well with AI on PropGraph
+## Summary: Working Well with AI on PropWeaver
 
 **Key Principles**:
 
@@ -863,4 +863,4 @@ git commit -m "Add limit() method to query iterators"
 7. **Use TODO.md** - Track multi-step work
 8. **Leverage the architecture** - Module boundaries contain changes
 
-PropGraph's design makes it excellent for AI collaboration. Use that to your advantage!
+PropWeaver's design makes it excellent for AI collaboration. Use that to your advantage!

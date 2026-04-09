@@ -1,12 +1,12 @@
 """
-Integration tests for PropGraph - testing real-world usage patterns.
+Integration tests for PropWeaver - testing real-world usage patterns.
 """
 
 from datetime import datetime
 
 import pytest
 
-from propgraph import PropertyGraph
+from propweaver import PropertyGraph
 
 
 class TestContextManager:

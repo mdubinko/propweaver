@@ -1,10 +1,10 @@
 """
-Tests for PropGraph query system functionality.
+Tests for PropWeaver query system functionality.
 """
 
 import pytest
 
-from propgraph.query import EdgeIterator, NodeIterator, QuerySpec, QueryStep
+from propweaver.query import EdgeIterator, NodeIterator, QuerySpec, QueryStep
 
 
 class TestQuerySpec:

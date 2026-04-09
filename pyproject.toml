@@ -3,13 +3,13 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "propgraph"
-version = "0.1.0"
+name = "propweaver"
+version = "0.2.1"
 description = "A general-purpose property graph database library built on SQLite"
 readme = "README.md"
 license = {text = "MIT"}
 authors = [
-    {name = "PropGraph Contributors"}
+    {name = "M.Joel Dubinko"}
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -35,17 +35,20 @@ dev = [
     "black",
     "isort",
     "mypy",
+    "build",
+    "twine",
     "pydantic>=2.0",
 ]
 
 [project.urls]
-Homepage = "https://github.com/yourusername/propgraph"
-Documentation = "https://github.com/yourusername/propgraph#readme"
-Repository = "https://github.com/yourusername/propgraph"
-Issues = "https://github.com/yourusername/propgraph/issues"
+Homepage = "https://github.com/mdubinko/propweaver"
+Documentation = "https://github.com/mdubinko/propweaver#readme"
+Repository = "https://github.com/mdubinko/propweaver"
+Issues = "https://github.com/mdubinko/propweaver/issues"
 
 [tool.setuptools]
 package-dir = {"" = "src"}
+license-files = ["LICENSE"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

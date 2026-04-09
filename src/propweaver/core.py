@@ -1,5 +1,5 @@
 """
-Core PropGraph classes - main API and proxy classes.
+Core PropWeaver classes - main API and proxy classes.
 
 This module contains the main user-facing classes:
 - PropertyGraph: The main graph database class
@@ -380,14 +380,14 @@ class PropertyGraph:
 
     # Logging control
     def set_log_level(self, level: int) -> None:
-        """Set logging level for all PropGraph operations
+        """Set logging level for all PropWeaver operations
 
         Args:
             level: logging.DEBUG, logging.INFO, logging.SUMMARY (25), etc.
 
         Example:
             import logging
-            from propgraph.logging_utils import SUMMARY
+            from propweaver.logging_utils import SUMMARY
 
             graph.set_log_level(logging.DEBUG)  # Show all SQL queries
             graph.set_log_level(SUMMARY)        # Token-efficient summaries only

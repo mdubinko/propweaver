@@ -1,4 +1,4 @@
-# PropGraph
+# PropWeaver
 
 A general-purpose property graph database library built on SQLite.
 
@@ -13,46 +13,44 @@ A general-purpose property graph database library built on SQLite.
 
 ## Installation
 
+### From PyPI
+```bash
+pip install propweaver
+# or with Pydantic API models:
+pip install "propweaver[api]"
+```
+
 ### Development Setup (with uv)
 ```bash
-git clone https://github.com/yourusername/propgraph.git
-cd propgraph
+git clone https://github.com/mdubinko/propweaver.git
+cd propweaver
 uv venv
 uv pip install -e .
 ```
 
 ### Development Setup (with pip)
 ```bash
-git clone https://github.com/yourusername/propgraph.git
-cd propgraph
+git clone https://github.com/mdubinko/propweaver.git
+cd propweaver
 python -m venv .venv
 source .venv/bin/activate  # or .venv\Scripts\activate on Windows
 pip install -e .
 ```
 
-### As Local Dependency
-Add to your `pyproject.toml`:
-```toml
-[dependencies]
-propgraph = {path = "../propgraph", develop = true}
-# or with Pydantic API models:
-propgraph = {path = "../propgraph", develop = true, extras = ["api"]}
-```
-
 ### Optional: Pydantic API Models
 
-`propgraph.api` provides Pydantic v2 models for validating PropGraph return values.
+`propweaver.api` provides Pydantic v2 models for validating PropWeaver return values.
 Install the extra to use them:
 ```bash
 uv pip install -e ".[api]"
 # or
-pip install "propgraph[api]"
+pip install "propweaver[api]"
 ```
 
 ## Quick Start
 
 ```python
-from propgraph import PropertyGraph
+from propweaver import PropertyGraph
 
 # Create an in-memory graph
 with PropertyGraph() as graph:
@@ -75,20 +73,20 @@ with PropertyGraph() as graph:
 
 ## Security Note
 
-PropGraph is designed for **trusted environments**. Before production use with sensitive data or untrusted input, review [SECURITY_AUDIT.md](SECURITY_AUDIT.md) for security considerations including path validation, encryption options, and resource monitoring. Use `graph.resource_stats()` to monitor database size and entity counts.
+PropWeaver is designed for **trusted environments**. Before production use with sensitive data or untrusted input, review [SECURITY_AUDIT.md](SECURITY_AUDIT.md) for security considerations including path validation, encryption options, and resource monitoring. Use `graph.resource_stats()` to monitor database size and entity counts.
 
 ## Logging Configuration
 
-PropGraph uses Python's standard logging module and respects your application's logging configuration. As a library, PropGraph does not configure handlers or formatters - it only emits log messages that your application controls.
+PropWeaver uses Python's standard logging module and respects your application's logging configuration. As a library, PropWeaver does not configure handlers or formatters - it only emits log messages that your application controls.
 
 ### Application Setup
 
-Configure PropGraph logging through your application's logging setup:
+Configure PropWeaver logging through your application's logging setup:
 
 ```python
 import logging.config
 
-# Example dictConfig for applications using PropGraph
+# Example dictConfig for applications using PropWeaver
 LOGGING_CONFIG = {
     'version': 1,
     'handlers': {
@@ -98,15 +96,15 @@ LOGGING_CONFIG = {
         }
     },
     'loggers': {
-        'propgraph': {
+        'propweaver': {
             'level': 'INFO',
             'handlers': ['console'],
             'propagate': False,
         },
-        'propgraph.storage': {  # SQL operations
+        'propweaver.storage': {  # SQL operations
             'level': 'WARNING',   # Reduce verbosity
         },
-        'propgraph.query': {    # Query operations
+        'propweaver.query': {    # Query operations
             'level': 'INFO',
         },
     }
@@ -117,7 +115,7 @@ logging.config.dictConfig(LOGGING_CONFIG)
 
 ### Log Levels
 
-PropGraph provides structured logging with these levels:
+PropWeaver provides structured logging with these levels:
 
 - **`SUMMARY` (25)** - Token-efficient emoji messages for key operations
 - **`INFO`** - Standard operational messages
@@ -125,11 +123,11 @@ PropGraph provides structured logging with these levels:
 - **`WARNING/ERROR`** - Issues and exceptions
 
 ```python
-from propgraph import PropertyGraph, SUMMARY
+from propweaver import PropertyGraph, SUMMARY
 
 # Quick setup for testing/development
 import logging
-logging.getLogger('propgraph').setLevel(SUMMARY)
+logging.getLogger('propweaver').setLevel(SUMMARY)
 
 # Your PropertyGraph operations will now emit concise emoji logs
 with PropertyGraph() as graph:
@@ -138,14 +136,14 @@ with PropertyGraph() as graph:
 
 ### Component Loggers
 
-PropGraph uses hierarchical loggers for different components:
+PropWeaver uses hierarchical loggers for different components:
 
-- `propgraph.storage` - Database operations and SQL queries
-- `propgraph.query` - Query execution and results
-- `propgraph.performance` - Slow operation warnings
-- `propgraph.stats` - Graph statistics and metrics
+- `propweaver.storage` - Database operations and SQL queries
+- `propweaver.query` - Query execution and results
+- `propweaver.performance` - Slow operation warnings
+- `propweaver.stats` - Graph statistics and metrics
 
-Enable SQL debugging by setting the storage logger to DEBUG level - PropGraph will automatically log all SQL queries with parameters and timing.
+Enable SQL debugging by setting the storage logger to DEBUG level - PropWeaver will automatically log all SQL queries with parameters and timing.
 
 ## Core Features
 
@@ -385,9 +383,9 @@ uv run --extra dev --extra api pytest
 ```
 
 ### Architecture
-- **`src/propgraph/storage.py`**: SQLite operations and type mapping
-- **`src/propgraph/query.py`**: Query building and lazy evaluation
-- **`src/propgraph/core.py`**: Main API and proxy classes
+- **`src/propweaver/storage.py`**: SQLite operations and type mapping
+- **`src/propweaver/query.py`**: Query building and lazy evaluation
+- **`src/propweaver/core.py`**: Main API and proxy classes
 
 ### Contributing
 1. Fork the repository
@@ -396,3 +394,7 @@ uv run --extra dev --extra api pytest
 4. Add tests for new functionality
 5. Run `./bin/dev.sh check` to verify all checks pass
 6. Submit a pull request
+
+## Release Process
+
+See [docs/RELEASE.md](docs/RELEASE.md) for the TestPyPI dry run and tagged PyPI release flow.

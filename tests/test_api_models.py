@@ -1,20 +1,20 @@
 """
-Tests for propgraph.api — Pydantic model round-trips and validation.
+Tests for propweaver.api — Pydantic model round-trips and validation.
 
-Requires pydantic: pip install 'propgraph[api]'
+Requires pydantic: pip install 'propweaver[api]'
 """
 
 import pytest
 
-pydantic = pytest.importorskip("pydantic", reason="pydantic not installed (pip install 'propgraph[api]')")
+pydantic = pytest.importorskip("pydantic", reason="pydantic not installed (pip install 'propweaver[api]')")
 
-from propgraph.api import (
+from propweaver.api import (
     EdgeModel,
     GraphStatsModel,
     GraphSummaryModel,
     NodeModel,
     PropertyGraphConfig,
-    PropGraphAPIVersion,
+    PropWeaverAPIVersion,
     QuerySpecModel,
     QueryStepModel,
 )
@@ -223,16 +223,16 @@ class TestPropertyGraphConfig:
             PropertyGraphConfig(unknown_option=True)
 
 
-# ─── PropGraphAPIVersion ──────────────────────────────────────────────────────
+# ─── PropWeaverAPIVersion ──────────────────────────────────────────────────────
 
 
-class TestPropGraphAPIVersion:
+class TestPropWeaverAPIVersion:
     def test_current_version(self):
-        from propgraph.api import CURRENT_API_VERSION, API_SCHEMA_VERSION
-        import propgraph
-        assert CURRENT_API_VERSION.propgraph_version == propgraph.__version__
+        from propweaver.api import CURRENT_API_VERSION, API_SCHEMA_VERSION
+        import propweaver
+        assert CURRENT_API_VERSION.propweaver_version == propweaver.__version__
         assert CURRENT_API_VERSION.api_schema_version == API_SCHEMA_VERSION
 
     def test_construct(self):
-        v = PropGraphAPIVersion(propgraph_version="1.2.3", api_schema_version="2")
-        assert v.propgraph_version == "1.2.3"
+        v = PropWeaverAPIVersion(propweaver_version="1.2.3", api_schema_version="2")
+        assert v.propweaver_version == "1.2.3"

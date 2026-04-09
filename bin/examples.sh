@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# Example runner for PropGraph development (uv-compatible)
+# Example runner for PropWeaver development (uv-compatible)
 
 set -e  # Exit on error
 
-echo "=== PropGraph Examples ==="
+echo "=== PropWeaver Examples ==="
 
 # Ensure virtual environment exists
 if [ ! -d ".venv" ]; then

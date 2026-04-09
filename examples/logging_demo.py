@@ -3,11 +3,11 @@
 
 import logging
 
-from propgraph import PropertyGraph
-from propgraph.logger import SUMMARY
+from propweaver import PropertyGraph
+from propweaver.logger import SUMMARY
 
 # Test different logging levels
-print("=== Testing PropGraph Logging ===")
+print("=== Testing PropWeaver Logging ===")
 
 print("\n1. Testing with DEBUG level (shows SQL):")
 with PropertyGraph() as graph:

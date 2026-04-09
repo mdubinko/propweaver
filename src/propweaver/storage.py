@@ -1,5 +1,5 @@
 """
-Storage layer for PropGraph - handles all database operations.
+Storage layer for PropWeaver - handles all database operations.
 
 This module contains the low-level database operations including:
 - TypeMapper for Python type to SQL conversion

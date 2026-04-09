@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Social Network Example for PropGraph
+Social Network Example for PropWeaver
 
 Demonstrates how to model and query a social network with users, friendships,
 and finding mutual connections.
@@ -12,7 +12,7 @@ from pathlib import Path
 # Add src to Python path for examples
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from propgraph import PropertyGraph
+from propweaver import PropertyGraph
 
 
 def main():

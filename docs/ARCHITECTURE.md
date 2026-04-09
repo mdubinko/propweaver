@@ -1,6 +1,6 @@
-# PropGraph Architecture & AI-Assisted Development
+# PropWeaver Architecture & AI-Assisted Development
 
-A comprehensive guide to understanding PropGraph's design, its core architectural decisions, and how to work effectively with AI tools to maintain and extend this codebase.
+A comprehensive guide to understanding PropWeaver's design, its core architectural decisions, and how to work effectively with AI tools to maintain and extend this codebase.
 
 ## Table of Contents
 
@@ -16,9 +16,9 @@ A comprehensive guide to understanding PropGraph's design, its core architectura
 
 ## Foundation
 
-### What Is PropGraph?
+### What Is PropWeaver?
 
-PropGraph is a **property graph database library** — a lightweight, dependency-free implementation of graph database fundamentals built on SQLite. Unlike traditional ORM systems or document databases, property graphs explicitly model:
+PropWeaver is a **property graph database library** — a lightweight, dependency-free implementation of graph database fundamentals built on SQLite. Unlike traditional ORM systems or document databases, property graphs explicitly model:
 
 - **Nodes**: Entities (users, products, concepts) with properties
 - **Edges**: Relationships between entities with their own properties
@@ -30,9 +30,9 @@ This makes property graphs ideal for:
 - Dependency analysis (components → depends_on → components)
 - Any domain where relationships and their attributes matter
 
-### Why PropGraph Exists
+### Why PropWeaver Exists
 
-PropGraph was built with specific constraints and goals:
+PropWeaver was built with specific constraints and goals:
 
 1. **No external dependencies** - The entire system uses only Python's standard library
 2. **Clear architecture** - Separated concerns make it easy to understand and modify
@@ -71,7 +71,7 @@ Edge: src=1, dst=2, type="WORKS_ON", role="Lead", since="2023-01-01"
 
 ## The Three-Layer Architecture
 
-PropGraph uses a **layered architecture** that separates concerns into three distinct levels:
+PropWeaver uses a **layered architecture** that separates concerns into three distinct levels:
 
 ```
 ┌─────────────────────────────────────────────┐
@@ -217,7 +217,7 @@ Before diving into each layer, understanding these patterns is essential:
 
 ### Pattern 1: Proxy Objects (NodeProxy, EdgeProxy)
 
-Instead of loading entire graph structures into memory, PropGraph uses lightweight **proxy objects**:
+Instead of loading entire graph structures into memory, PropWeaver uses lightweight **proxy objects**:
 
 ```python
 ## EXAMPLE
@@ -281,7 +281,7 @@ user.props["created"] = datetime.now()               # datetime object
 ```
 
 **Why?**
-- PropGraph appears to store any Python type (great UX)
+- PropWeaver appears to store any Python type (great UX)
 - SQLite stores it efficiently (as JSON for complex types)
 - Full type fidelity on retrieval (get back exactly what you put in)
 
@@ -491,7 +491,7 @@ del user.props["name"]             # DELETE
 
 ## Design for AI Collaboration
 
-PropGraph was designed with AI-assisted development specifically in mind. This section explains those choices.
+PropWeaver was designed with AI-assisted development specifically in mind. This section explains those choices.
 
 ### 1. Zero External Dependencies
 
@@ -539,7 +539,7 @@ senior_engineers = (graph.nodes("User")
 # instead of having to understand SQL generation patterns
 ```
 
-This fluent interface **plays extremely well** with downstream projects that also use AI tools. A student's AI assistant can suggest PropGraph code using patterns it understands (method chaining, filter operations) rather than having to understand internal query generation.
+This fluent interface **plays extremely well** with downstream projects that also use AI tools. A student's AI assistant can suggest PropWeaver code using patterns it understands (method chaining, filter operations) rather than having to understand internal query generation.
 
 #### B. Module Boundary "Fencing" for AI Assistants
 
@@ -680,11 +680,11 @@ test_integration.py    - End-to-end scenarios
 
 ## Thinking Like a Maintainer
 
-As a maintainer of PropGraph (or a student working on it), here's how to approach problems.
+As a maintainer of PropWeaver (or a student working on it), here's how to approach problems.
 
 ### The Mental Model
 
-Think of PropGraph as three separate concerns:
+Think of PropWeaver as three separate concerns:
 
 1. **What should happen?** (Core API / user perspective)
 2. **How should we build it?** (Query system / specification)
@@ -765,7 +765,7 @@ This top-down approach is faster than bottom-up.
 
 ### Working with AI Tools on This Codebase
 
-PropGraph is designed to work well with AI-assisted development. Here's how:
+PropWeaver is designed to work well with AI-assisted development. Here's how:
 
 **When asking AI to modify code**:
 - Specify which layer(s) need changes (storage, query, or core)
@@ -924,9 +924,9 @@ Understanding *why* certain choices were made helps you recognize when to follow
 
 ---
 
-## Summary: The PropGraph Philosophy
+## Summary: The PropWeaver Philosophy
 
-PropGraph's architecture embodies these principles:
+PropWeaver's architecture embodies these principles:
 
 1. **Clarity Over Cleverness** - Three clear layers, not magic
 2. **Pythonic Design** - Uses familiar Python patterns (`with`, iteration, dicts)
@@ -935,7 +935,7 @@ PropGraph's architecture embodies these principles:
 5. **Transparency** - You understand what's happening at each layer
 6. **Testing** - Extensive tests as both validation and documentation
 
-When extending or maintaining PropGraph, ask yourself:
+When extending or maintaining PropWeaver, ask yourself:
 - Does this follow existing patterns?
 - Is the change isolated to one layer?
 - Are tests updated alongside code?

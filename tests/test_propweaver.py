@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-Comprehensive tests for PropGraph functionality.
+Comprehensive tests for PropWeaver functionality.
 
 Tests all core functionality including:
 - Basic CRUD operations
@@ -21,16 +21,16 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 try:
-    from propgraph import PropertyGraph
-    from propgraph.logger import configure_test_output
-    from propgraph.query import EdgeIterator, NodeIterator, QuerySpec, QueryStep
+    from propweaver import PropertyGraph
+    from propweaver.logger import configure_test_output
+    from propweaver.query import EdgeIterator, NodeIterator, QuerySpec, QueryStep
 except ImportError as e:
     print(f"Import error: {e}")
-    print("Testing what's available in propgraph...")
+    print("Testing what's available in propweaver...")
     try:
-        import propgraph
+        import propweaver
 
-        print(f"Available: {dir(propgraph)}")
+        print(f"Available: {dir(propweaver)}")
     except:
         pass
     sys.exit(1)
@@ -40,7 +40,7 @@ def test_query_spec_construction():
     """Test basic QuerySpec construction"""
     import logging
 
-    logger = logging.getLogger("propgraph.tests")
+    logger = logging.getLogger("propweaver.tests")
 
     logger.info("Testing QuerySpec construction...")
 
@@ -419,12 +419,12 @@ def main():
 
     # Configure logging based on mode
     configure_test_output(brief=brief_mode, suppress_warnings=True)
-    logger = logging.getLogger("propgraph.tests")
+    logger = logging.getLogger("propweaver.tests")
 
     if brief_mode:
-        logger.summary("=== PropGraph Tests ===")
+        logger.summary("=== PropWeaver Tests ===")
     else:
-        logger.info("=== PropGraph Comprehensive Test Suite ===")
+        logger.info("=== PropWeaver Comprehensive Test Suite ===")
         logger.info("")
 
     try:
@@ -468,7 +468,7 @@ def main():
 
         logger.summary("🎉 All tests PASSED!")
         if not brief_mode:
-            logger.info("✅ PropGraph library is fully functional!")
+            logger.info("✅ PropWeaver library is fully functional!")
             logger.info("✅ Ready for use as standalone library!")
 
     except Exception as e:

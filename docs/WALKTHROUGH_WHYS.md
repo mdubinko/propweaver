@@ -11,14 +11,14 @@ This document is for future maintainers (including AI tools working on this code
 
 ## Overview of the Architecture Guides
 
-We created three living documents to help students and contributors understand PropGraph:
+We created three living documents to help students and contributors understand PropWeaver:
 
 ### ARCHITECTURE.md (The Main Guide)
 
-**Purpose**: Comprehensive overview of PropGraph's design and how it works
+**Purpose**: Comprehensive overview of PropWeaver's design and how it works
 
 **Content**:
-- Foundation: What PropGraph is and why it exists
+- Foundation: What PropWeaver is and why it exists
 - Three-layer architecture explanation
 - Core design patterns (proxies, lazy evaluation, etc.)
 - Architecture by layer (detailed exploration of each)
@@ -62,7 +62,7 @@ We created three living documents to help students and contributors understand P
 **Purpose**: Practical guide for working with AI tools on this codebase
 
 **Content**:
-- Why PropGraph works well with AI tools
+- Why PropWeaver works well with AI tools
 - How to get AI oriented (sequence of steps)
 - Effective prompting patterns
 - How architecture helps and constrains AI
@@ -72,7 +72,7 @@ We created three living documents to help students and contributors understand P
 - Using CLAUDE.md and TODO.md
 - Real example
 
-**Audience**: People using AI tools to develop PropGraph
+**Audience**: People using AI tools to develop PropWeaver
 
 **Update Triggers**:
 - You discover a new effective pattern for AI collaboration
@@ -153,7 +153,7 @@ We created three living documents to help students and contributors understand P
 ```markdown
 ### Pattern X: [Pattern Name]
 
-Instead of [what people might do], PropGraph uses [this approach]:
+Instead of [what people might do], PropWeaver uses [this approach]:
 
 [Code example showing the pattern]
 
@@ -314,7 +314,7 @@ These architecture guides are not the place for:
 
 ## Evolution of These Documents
 
-These documents should evolve as PropGraph evolves:
+These documents should evolve as PropWeaver evolves:
 
 ### Phase 1: Initial Creation (Done)
 - Created comprehensive ARCHITECTURE.md
@@ -454,4 +454,4 @@ These documents are living, evolving guides:
 - **AI_COLLABORATION.md**: Practical workflows and patterns
 - **WALKTHROUGH_WHYS.md**: This meta-guide for updating them
 
-Together, they form a comprehensive explanation of PropGraph's design. Keep them aligned, accurate, and helpful. They're your greatest tool for onboarding new contributors and working effectively with AI tools.
+Together, they form a comprehensive explanation of PropWeaver's design. Keep them aligned, accurate, and helpful. They're your greatest tool for onboarding new contributors and working effectively with AI tools.

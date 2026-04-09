@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-Generate contract.json — a machine-readable description of the PropGraph public API.
+Generate contract.json — a machine-readable description of the PropWeaver public API.
 
 Intended for consumption by AI agents (e.g. Claude Code) working on projects that
-import propgraph, so they can verify method names, signatures, and return types
+import propweaver, so they can verify method names, signatures, and return types
 without reading source code.
 
 Usage:
@@ -22,8 +22,8 @@ from typing import Any, get_type_hints
 # Ensure the src layout is importable when run directly
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-import propgraph
-from propgraph import (
+import propweaver
+from propweaver import (
     PropertyGraph,
     NodeProxy,
     EdgeProxy,
@@ -32,8 +32,8 @@ from propgraph import (
     QuerySpec,
     QueryStep,
 )
-from propgraph import exceptions as exc_module
-import propgraph.exceptions as _exc
+from propweaver import exceptions as exc_module
+import propweaver.exceptions as _exc
 
 
 # ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -45,7 +45,7 @@ def _annotation_str(annotation: Any) -> str:
         return "Any"
     if hasattr(annotation, "__name__"):
         return annotation.__name__
-    return str(annotation).replace("typing.", "").replace("propgraph.core.", "")
+    return str(annotation).replace("typing.", "").replace("propweaver.core.", "")
 
 
 def _describe_method(method: Any) -> dict:
@@ -122,38 +122,38 @@ def _describe_class(cls: type, public_methods: list[str] | None = None) -> dict:
 
 def build() -> dict:
     contract: dict[str, Any] = {
-        "propgraph_version": propgraph.__version__,
+        "propweaver_version": propweaver.__version__,
         "description": (
-            "Machine-readable PropGraph public API contract. "
+            "Machine-readable PropWeaver public API contract. "
             "Use this file to verify method names, parameter types, and return types "
-            "before calling PropGraph from another project."
+            "before calling PropWeaver from another project."
         ),
     }
 
     # ── Core classes ──────────────────────────────────────────────────────────
     contract["classes"] = {
         "PropertyGraph": {
-            "import": "from propgraph import PropertyGraph",
+            "import": "from propweaver import PropertyGraph",
             "alias": "Graph",
             **_describe_class(PropertyGraph),
         },
         "NodeProxy": {
-            "import": "from propgraph import NodeProxy",
+            "import": "from propweaver import NodeProxy",
             "note": "Returned by PropertyGraph.add_node() and node iterators. Not instantiated directly.",
             **_describe_class(NodeProxy),
         },
         "EdgeProxy": {
-            "import": "from propgraph import EdgeProxy",
+            "import": "from propweaver import EdgeProxy",
             "note": "Returned by PropertyGraph.add_edge() and edge iterators. Not instantiated directly.",
             **_describe_class(EdgeProxy),
         },
         "NodeIterator": {
-            "import": "from propgraph import NodeIterator",
+            "import": "from propweaver import NodeIterator",
             "note": "Returned by PropertyGraph.nodes(). Supports method chaining and iteration.",
             **_describe_class(NodeIterator),
         },
         "EdgeIterator": {
-            "import": "from propgraph import EdgeIterator",
+            "import": "from propweaver import EdgeIterator",
             "note": "Returned by PropertyGraph.edges(). Supports method chaining and iteration.",
             **_describe_class(EdgeIterator),
         },
@@ -166,7 +166,7 @@ def build() -> dict:
             "most callers use the fluent API on NodeIterator/EdgeIterator instead."
         ),
         "QueryStep": {
-            "import": "from propgraph import QueryStep",
+            "import": "from propweaver import QueryStep",
             "fields": {
                 "type": {
                     "type": "Literal['SOURCE', 'FILTER', 'TRAVERSE', 'ORDER', 'DELETE']",
@@ -194,7 +194,7 @@ def build() -> dict:
             },
         },
         "QuerySpec": {
-            "import": "from propgraph import QuerySpec",
+            "import": "from propweaver import QuerySpec",
             "fields": {
                 "steps": {"type": "List[QueryStep]", "default": []},
                 "returning": {
@@ -221,7 +221,7 @@ def build() -> dict:
         if (
             isinstance(obj, type)
             and issubclass(obj, Exception)
-            and obj.__module__ == "propgraph.exceptions"
+            and obj.__module__ == "propweaver.exceptions"
         ):
             bases = [b.__name__ for b in obj.__bases__ if b is not Exception]
             entry: dict[str, Any] = {"description": inspect.getdoc(obj) or ""}
@@ -230,14 +230,14 @@ def build() -> dict:
             exc_classes[name] = entry
 
     contract["exceptions"] = {
-        "import": "from propgraph import <ExceptionClass>",
-        "hierarchy_root": "PropGraphError",
+        "import": "from propweaver import <ExceptionClass>",
+        "hierarchy_root": "PropWeaverError",
         "classes": exc_classes,
     }
 
     # ── Pydantic API models ───────────────────────────────────────────────────
     try:
-        from propgraph import api as api_module
+        from propweaver import api as api_module
         from pydantic import BaseModel
 
         models: dict[str, Any] = {}
@@ -246,25 +246,25 @@ def build() -> dict:
             if (
                 isinstance(obj, type)
                 and issubclass(obj, BaseModel)
-                and obj.__module__ == "propgraph.api"
+                and obj.__module__ == "propweaver.api"
             ):
                 schema = obj.model_json_schema()
                 models[name] = {
-                    "import": f"from propgraph.api import {name}",
+                    "import": f"from propweaver.api import {name}",
                     "description": inspect.getdoc(obj) or "",
                     "json_schema": schema,
                 }
 
         contract["api_models"] = {
             "description": (
-                "Pydantic v2 models for validating PropGraph return values. "
-                "Requires: pip install 'propgraph[api]'"
+                "Pydantic v2 models for validating PropWeaver return values. "
+                "Requires: pip install 'propweaver[api]'"
             ),
             "models": models,
         }
     except ImportError:
         contract["api_models"] = {
-            "description": "Pydantic models not available. Install with: pip install 'propgraph[api]'",
+            "description": "Pydantic models not available. Install with: pip install 'propweaver[api]'",
             "models": {},
         }
 

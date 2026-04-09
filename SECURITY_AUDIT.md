@@ -1,12 +1,12 @@
-# PropGraph Security Audit Report
+# PropWeaver Security Audit Report
 
 **Date:** 2025-12-13
 **Auditor:** Claude Code Security Analysis
-**Scope:** PropGraph v0.1.0 codebase
+**Scope:** PropWeaver v0.2.1 codebase
 
 ## Executive Summary
 
-This security audit examines the PropGraph library against the OWASP Top 10 2025 and SQLite security best practices. PropGraph is a graph database library built on SQLite with zero external dependencies.
+This security audit examines the PropWeaver library against the OWASP Top 10 2025 and SQLite security best practices. PropWeaver is a graph database library built on SQLite with zero external dependencies.
 
 **Overall Security Posture:** GOOD ✅
 
@@ -167,9 +167,9 @@ graph = PropertyGraph(
 **Status:** NOT APPLICABLE
 
 **Analysis:**
-PropGraph is a library, not a service. Access control is the responsibility of the consuming application. The library provides no authentication or authorization mechanisms, which is appropriate for a database library.
+PropWeaver is a library, not a service. Access control is the responsibility of the consuming application. The library provides no authentication or authorization mechanisms, which is appropriate for a database library.
 
-**Note:** Applications using PropGraph must implement their own access control.
+**Note:** Applications using PropWeaver must implement their own access control.
 
 ---
 
@@ -197,7 +197,7 @@ No encryption at rest or in transit. SQLite databases are stored as plaintext fi
 ```markdown
 ## Data Security
 
-PropGraph stores data in plaintext SQLite files. For sensitive data:
+PropWeaver stores data in plaintext SQLite files. For sensitive data:
 
 1. Use filesystem encryption (LUKS, BitLocker, FileVault)
 2. Use SQLCipher for database encryption
@@ -335,7 +335,7 @@ CREATE TABLE IF NOT EXISTS audit_log (
 
 **Status:** NOT APPLICABLE
 
-**Analysis:** PropGraph does not make any network requests or load external resources.
+**Analysis:** PropWeaver does not make any network requests or load external resources.
 
 ---
 
@@ -503,7 +503,7 @@ def test_resource_limits():
 
 ## Conclusion
 
-PropGraph demonstrates **excellent security practices** with:
+PropWeaver demonstrates **excellent security practices** with:
 - ✅ Excellent SQL injection prevention (parameterized queries throughout)
 - ✅ Safe deserialization practices (json.loads only)
 - ✅ Zero external dependencies (minimal attack surface)
@@ -518,9 +518,9 @@ PropGraph demonstrates **excellent security practices** with:
 - ⚠️ No built-in resource limits (monitoring available, enforcement needed)
 
 **Security Posture Update (2025-12-13):**
-With the addition of path validation and resource monitoring, PropGraph has **significantly improved security**. The most critical vulnerability (path traversal) has been fixed with comprehensive test coverage.
+With the addition of path validation and resource monitoring, PropWeaver has **significantly improved security**. The most critical vulnerability (path traversal) has been fixed with comprehensive test coverage.
 
-**Recommendation:** PropGraph is now **suitable for production use in controlled environments**. For maximum security with untrusted input:
+**Recommendation:** PropWeaver is now **suitable for production use in controlled environments**. For maximum security with untrusted input:
 1. Use `allowed_base_dir` parameter to restrict database locations
 2. Monitor resources with `resource_stats()`
 3. Implement application-level input validation

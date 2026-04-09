@@ -12,13 +12,13 @@ from pathlib import Path
 # Add src to path for running directly
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from propgraph import PropertyGraph
+from propweaver import PropertyGraph
 
 def main():
     """Demonstrate efficient schema inspection"""
 
     with PropertyGraph(':memory:') as graph:
-        print("📊 PropGraph Edge/Node Type Listing Demo")
+        print("📊 PropWeaver Edge/Node Type Listing Demo")
         print("=" * 45)
 
         # Start with empty graph

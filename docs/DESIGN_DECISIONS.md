@@ -1,6 +1,6 @@
-# PropGraph Design Decisions: Deep Dives
+# PropWeaver Design Decisions: Deep Dives
 
-This document provides deeper exploration of key architectural decisions in PropGraph. Each decision represents a trade-off between different approaches. Understanding these trade-offs helps you:
+This document provides deeper exploration of key architectural decisions in PropWeaver. Each decision represents a trade-off between different approaches. Understanding these trade-offs helps you:
 
 1. Know when to follow the pattern vs. when to break it
 2. Understand why the code is structured as it is
@@ -26,7 +26,7 @@ This document provides deeper exploration of key architectural decisions in Prop
 
 ### The Decision
 
-PropGraph separates code into three distinct layers:
+PropWeaver separates code into three distinct layers:
 - **Core API Layer** (core.py): User-facing interface
 - **Query Layer** (query.py): Declarative query building
 - **Storage Layer** (storage.py): Database operations
@@ -358,7 +358,7 @@ user = graph.add_node("User", name="Alice")
 user.props["name"] = "Alice Smith"
 
 # If someone else modifies in another connection:
-# (not common in PropGraph, but principle matters)
+# (not common in PropWeaver, but principle matters)
 current_name = user.props["name"]  # Reads from DB
 ```
 
@@ -1090,7 +1090,7 @@ class Example:
         pass
 ```
 
-PropGraph uses single underscore for "private, but accessible if needed" (not name mangling).
+PropWeaver uses single underscore for "private, but accessible if needed" (not name mangling).
 
 ### When Someone Uses Private APIs
 

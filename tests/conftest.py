@@ -1,5 +1,5 @@
 """
-Pytest configuration and fixtures for PropGraph tests.
+Pytest configuration and fixtures for PropWeaver tests.
 """
 
 import os
@@ -12,7 +12,7 @@ import pytest
 # Add src to Python path for testing
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from propgraph import PropertyGraph
+from propweaver import PropertyGraph
 
 
 @pytest.fixture

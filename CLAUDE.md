@@ -1,10 +1,10 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with the PropGraph library.
+This file provides guidance to Claude Code (claude.ai/code) when working with the PropWeaver library.
 
 ## Approach
 
-The top goal here is to produce clean, maintainable, readable v3.12 pythonic code that sets the standard for AI-generated projects, and can serve as an example for future generations.
+The top goal here is to produce clean, maintainable, readable pythonic code that sets the standard for AI-generated projects, and can serve as an example for future generations.
 
 Always make sure tests stay in sync with the implementation.
 
@@ -12,7 +12,7 @@ Use TODO.md to keep track of TODO items across Claude sessions.
 
 ## Emoji Style Guide
 
-PropGraph uses a systematic approach to emojis in development output to enhance readability and minimize token usage when working with AI tools. Emojis provide dense visual information that would otherwise require multiple words.
+PropWeaver uses a systematic approach to emojis in development output to enhance readability and minimize token usage when working with AI tools. Emojis provide dense visual information that would otherwise require multiple words.
 
 ### **Test Results & Status**
 - ✅ **Success/Completion**: Test passes, operation successful, task completed
@@ -43,7 +43,7 @@ PropGraph uses a systematic approach to emojis in development output to enhance 
 
 ## Project Overview
 
-PropGraph is a general-purpose property graph database library built on SQLite. It provides:
+PropWeaver is a general-purpose property graph database library built on SQLite. It provides:
 
 - **Nodes and edges with arbitrary properties** - Store any Python data type
 - **CRUD operations with bulk mutations** - Individual and mass operations  
@@ -52,21 +52,21 @@ PropGraph is a general-purpose property graph database library built on SQLite. 
 - **Type-safe operations** - Literal types and comprehensive testing
 - **Zero external dependencies** - Pure Python standard library
 
-PropGraph is designed to be reusable for any graph database needs including social networks, knowledge graphs, dependency analysis, and more.
+PropWeaver is designed to be reusable for any graph database needs including social networks, knowledge graphs, dependency analysis, and more.
 
 ## Architecture
 
 ### Core Modules
 
-- **`src/propgraph/storage.py`**: Low-level database operations and type mapping
+- **`src/propweaver/storage.py`**: Low-level database operations and type mapping
   - `TypeMapper`: Python type ↔ SQLite storage conversion
   - `StorageLayer`: All SQL operations, schema management, transactions
   
-- **`src/propgraph/query.py`**: Declarative query system with lazy evaluation
+- **`src/propweaver/query.py`**: Declarative query system with lazy evaluation
   - `QuerySpec`/`QueryStep`: Declarative query representation
   - `NodeIterator`/`EdgeIterator`: XPath-style method chaining
 
-- **`src/propgraph/core.py`**: Main user-facing API
+- **`src/propweaver/core.py`**: Main user-facing API
   - `PropertyGraph`: Primary database interface
   - `NodeProxy`/`EdgeProxy`: Lightweight entity handles
 
@@ -149,7 +149,7 @@ SQLite tables with foreign key constraints and cascading deletes:
 
 #### Creating Nodes and Edges
 ```python
-from propgraph import PropertyGraph
+from propweaver import PropertyGraph
 
 with PropertyGraph("my_graph.db") as graph:
     # Create nodes with properties
@@ -275,7 +275,7 @@ for edge_type in graph.edge_types():
 
 ## Query Architecture
 
-The PropGraph uses a declarative query system with lazy evaluation:
+The PropWeaver uses a declarative query system with lazy evaluation:
 
 - **QuerySpec**: Declarative query specification with steps
 - **QueryStep**: Individual operations (SOURCE, FILTER, TRAVERSE, DELETE, etc.)
@@ -358,7 +358,7 @@ except Exception as e:
 ### Type Safety
 ```python
 # Use type hints for better IDE support
-from propgraph import PropertyGraph, NodeProxy, EdgeProxy
+from propweaver import PropertyGraph, NodeProxy, EdgeProxy
 
 def process_user(user: NodeProxy) -> None:
     name: str = user.props["name"]
@@ -374,35 +374,14 @@ Look in the examples/ directory for some common usage patterns.
 
 ## API Contract
 
-`contract.json` in the repo root is a machine-readable description of the complete public API. It is the primary reference for other Claude Code instances and consuming projects to verify they are calling PropGraph APIs correctly.
+`contract.json` in the repo root is a machine-readable description of the complete public API. It is the primary reference for other Claude Code instances and consuming projects to verify they are calling PropWeaver APIs correctly.
 
 **Regenerate after any API change:**
 ```bash
 uv run --extra api python bin/build_contract.py
 ```
 
-**Bump `propgraph_version` in `src/propgraph/__init__.py` when making compatibility-breaking changes** (removed methods, renamed parameters, changed return types). This signals to consumers that they need to re-verify their usage against the updated contract.
+**Bump `propweaver_version` in `src/propweaver/__init__.py` when making compatibility-breaking changes** (removed methods, renamed parameters, changed return types). This signals to consumers that they need to re-verify their usage against the updated contract.
 
 Non-breaking additions (new methods, new optional parameters) do not require a version bump but the contract should still be regenerated and committed.
 
-## Integration with Other Projects
-
-### As a Dependency
-Add to `pyproject.toml`:
-```toml
-[dependencies]
-propgraph = {path = "../propgraph", develop = true}  # Local development
-# or
-propgraph = ">=0.1.0"  # When published to PyPI
-```
-
-### Import Patterns
-```python
-# Recommended imports
-from propgraph import PropertyGraph  # Main class
-from propgraph import NodeProxy, EdgeProxy  # For type hints
-
-# Internal APIs (advanced usage)
-from propgraph.query import QuerySpec, QueryStep
-from propgraph.storage import StorageLayer, TypeMapper
-```

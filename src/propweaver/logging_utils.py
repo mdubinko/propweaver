@@ -1,5 +1,5 @@
 """
-Modern logging utilities for PropGraph library.
+Modern logging utilities for PropWeaver library.
 
 Designed to work as a library component that respects the application's
 logging configuration through proper logger hierarchy and propagation.
@@ -34,7 +34,7 @@ logging.Logger.sql = sql  # type: ignore
 
 def get_logger(name: str) -> logging.Logger:
     """
-    Get a PropGraph logger that inherits from application configuration.
+    Get a PropWeaver logger that inherits from application configuration.
 
     Uses proper logger hierarchy so that the main application can control
     all logging behavior through its dictConfig.
@@ -43,9 +43,9 @@ def get_logger(name: str) -> logging.Logger:
         name: Component name (e.g., "storage", "query", "core")
 
     Returns:
-        Logger instance that will inherit from parent "propgraph" logger
+        Logger instance that will inherit from parent "propweaver" logger
     """
-    return logging.getLogger(f"propgraph.{name}")
+    return logging.getLogger(f"propweaver.{name}")
 
 
 def log_with_context(logger: logging.Logger, level: int, message: str, **context: Any) -> None:
@@ -53,7 +53,7 @@ def log_with_context(logger: logging.Logger, level: int, message: str, **context
     Log a message with structured context.
 
     This provides the same pattern as Cogno for consistency across
-    the PropGraph library and main application.
+    the PropWeaver library and main application.
 
     Args:
         logger: Logger instance
@@ -65,11 +65,11 @@ def log_with_context(logger: logging.Logger, level: int, message: str, **context
         logger.name, level, "", 0, message, (), None
     )
     # Add context as a custom attribute that formatters can use
-    record.propgraph_context = context
+    record.propweaver_context = context
     logger.handle(record)
 
 
-# Convenience functions for common PropGraph logging patterns
+# Convenience functions for common PropWeaver logging patterns
 def log_storage_operation(operation: str, table: str, node_id: Optional[str] = None,
                          elapsed_ms: Optional[float] = None, **context: Any) -> None:
     """Log storage operations with structured context"""
@@ -186,17 +186,17 @@ def log_error_with_context(component: str, error: Exception, operation: str = ""
     log_with_context(logger, logging.ERROR, message, **ctx)
 
 
-# Backward compatibility functions for existing PropGraph code
+# Backward compatibility functions for existing PropWeaver code
 def configure_for_tests(brief: bool = False) -> None:
     """
-    Configure PropGraph logging for tests.
+    Configure PropWeaver logging for tests.
 
     This is a compatibility function. In the new design, the application
     should configure logging via dictConfig which will automatically
-    control PropGraph loggers.
+    control PropWeaver loggers.
     """
-    # For backward compatibility, we'll configure the propgraph root logger
-    logger = logging.getLogger("propgraph")
+    # For backward compatibility, we'll configure the propweaver root logger
+    logger = logging.getLogger("propweaver")
 
     if brief:
         logger.setLevel(SUMMARY)
@@ -206,16 +206,16 @@ def configure_for_tests(brief: bool = False) -> None:
 
 def set_log_level(level: int) -> None:
     """
-    Set PropGraph logging level.
+    Set PropWeaver logging level.
 
     This is a compatibility function. Prefer using the application's
-    dictConfig to control PropGraph logging levels.
+    dictConfig to control PropWeaver logging levels.
     """
-    logger = logging.getLogger("propgraph")
+    logger = logging.getLogger("propweaver")
     logger.setLevel(level)
 
 
 def get_log_level() -> int:
-    """Get current PropGraph logging level"""
-    logger = logging.getLogger("propgraph")
+    """Get current PropWeaver logging level"""
+    logger = logging.getLogger("propweaver")
     return logger.level

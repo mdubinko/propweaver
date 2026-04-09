@@ -1,6 +1,6 @@
 """Test the edge_types() and node_types() functionality"""
 
-from propgraph import PropertyGraph
+from propweaver import PropertyGraph
 
 
 def test_list_types():

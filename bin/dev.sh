@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# Development utilities for PropGraph (uv-compatible)
+# Development utilities for PropWeaver (uv-compatible)
 
 set -e  # Exit on error
 
-echo "=== PropGraph Development Utilities ==="
+echo "=== PropWeaver Development Utilities ==="
 
 # Ensure virtual environment exists
 if [ ! -d ".venv" ]; then
@@ -16,7 +16,7 @@ case "${1:-help}" in
     "basic")
         echo "Testing basic functionality..."
         uv run python3 -c "
-from propgraph import PropertyGraph
+from propweaver import PropertyGraph
 with PropertyGraph() as g:
     user = g.add_node('User', name='Alice')
     print(f'Created: {user}')
@@ -26,7 +26,7 @@ with PropertyGraph() as g:
     "bulk")
         echo "Testing bulk operations..."
         uv run python3 -c "
-from propgraph import PropertyGraph
+from propweaver import PropertyGraph
 with PropertyGraph() as g:
     g.add_node('TempUser', name='temp1')
     g.add_node('TempUser', name='temp2') 
@@ -56,13 +56,14 @@ with PropertyGraph() as g:
         find . -name "*.db" -type f -delete
         find . -name "__pycache__" -type d -exec rm -rf {} + 2>/dev/null || true
         find . -name "*.pyc" -type f -delete
-        rm -rf .pytest_cache htmlcov .coverage
+        rm -rf .pytest_cache htmlcov .coverage build
+        find dist -mindepth 1 ! -name ".gitignore" -delete 2>/dev/null || true
         echo "Cleanup completed!"
         ;;
     "install")
-        echo "Installing PropGraph in development mode..."
+        echo "Installing PropWeaver in development mode..."
         uv pip install -e .
-        echo "PropGraph installed in development mode!"
+        echo "PropWeaver installed in development mode!"
         ;;
     "check")
         echo "Running full development checks..."
@@ -80,10 +81,10 @@ with PropertyGraph() as g:
         echo "Usage: $0 [command]"
         echo ""
         echo "Development Commands:"
-        echo "  basic     - Test basic PropGraph functionality"
+        echo "  basic     - Test basic PropWeaver functionality"
         echo "  bulk      - Test bulk operations"
         echo "  setup     - Set up development environment"
-        echo "  install   - Install PropGraph in development mode"
+        echo "  install   - Install PropWeaver in development mode"
         echo "  lint      - Format code and run linting"
         echo "  check     - Run all development checks"
         echo "  clean     - Clean up development artifacts"

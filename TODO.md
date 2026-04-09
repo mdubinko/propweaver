@@ -1,6 +1,6 @@
-# PropGraph TODO
+# PropWeaver TODO
 
-This file tracks development tasks and improvements for the PropGraph library.
+This file tracks development tasks and improvements for the PropWeaver library.
 
 ## High Priority
 
@@ -38,7 +38,7 @@ This file tracks development tasks and improvements for the PropGraph library.
 - [ ] Add query debugging/logging capabilities
 - [ ] Create development utilities (schema inspection, etc.)
 - [ ] Investigate self-logging exceptions (similar to structured logging patterns)
-- [ ] **Check logging setup for PropGraph development** - Verify that `configure_for_tests()` is called in conftest.py or test setup so developers see PropGraph logs during testing. Without application logging config, PropGraph logs may not be visible during standalone development.
+- [ ] **Check logging setup for PropWeaver development** - Verify that `configure_for_tests()` is called in conftest.py or test setup so developers see PropWeaver logs during testing. Without application logging config, PropWeaver logs may not be visible during standalone development.
 
 ### Testing & Quality
 - [ ] Add performance benchmarks

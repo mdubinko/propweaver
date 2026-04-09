@@ -1,9 +1,9 @@
 {
-  "propgraph_version": "0.1.0",
-  "description": "Machine-readable PropGraph public API contract. Use this file to verify method names, parameter types, and return types before calling PropGraph from another project.",
+  "propweaver_version": "0.2.1",
+  "description": "Machine-readable PropWeaver public API contract. Use this file to verify method names, parameter types, and return types before calling PropWeaver from another project.",
   "classes": {
     "PropertyGraph": {
-      "import": "from propgraph import PropertyGraph",
+      "import": "from propweaver import PropertyGraph",
       "alias": "Graph",
       "description": "SQLite-backed property graph database\n\nExample:\n    # Create graph and add nodes with properties\n    with PropertyGraph() as graph:\n        person = graph.add_node(\"person\", name=\"Alice\", age=30)\n        city = graph.add_node(\"city\", name=\"San Francisco\")\n\n        # Connect them with a relationship\n        lives_in = graph.add_edge(person, \"lives_in\", city, since=2020)\n\n        # Set graph-level metadata\n        graph.props[\"project_name\"] = \"Social Network\"\n        graph.props[\"version\"] = \"1.0\"\n\n        # Query the graph\n        results = list(graph.nodes(\"person\", name=\"Alice\"))\n        schema_version = graph.props[\"schema_version\"]  # Always available\n    # Automatically closed when exiting with block",
       "constructor": {
@@ -152,7 +152,7 @@
             }
           },
           "returns": "None",
-          "description": "Set logging level for all PropGraph operations\n\nArgs:\n    level: logging.DEBUG, logging.INFO, logging.SUMMARY (25), etc.\n\nExample:\n    import logging\n    from propgraph.logging_utils import SUMMARY\n\n    graph.set_log_level(logging.DEBUG)  # Show all SQL queries\n    graph.set_log_level(SUMMARY)        # Token-efficient summaries only"
+          "description": "Set logging level for all PropWeaver operations\n\nArgs:\n    level: logging.DEBUG, logging.INFO, logging.SUMMARY (25), etc.\n\nExample:\n    import logging\n    from propweaver.logging_utils import SUMMARY\n\n    graph.set_log_level(logging.DEBUG)  # Show all SQL queries\n    graph.set_log_level(SUMMARY)        # Token-efficient summaries only"
         },
         "timestamp": {
           "params": {},
@@ -172,7 +172,7 @@
       }
     },
     "NodeProxy": {
-      "import": "from propgraph import NodeProxy",
+      "import": "from propweaver import NodeProxy",
       "note": "Returned by PropertyGraph.add_node() and node iterators. Not instantiated directly.",
       "description": "Lightweight proxy for a node in the graph",
       "constructor": {
@@ -210,7 +210,7 @@
       }
     },
     "EdgeProxy": {
-      "import": "from propgraph import EdgeProxy",
+      "import": "from propweaver import EdgeProxy",
       "note": "Returned by PropertyGraph.add_edge() and edge iterators. Not instantiated directly.",
       "description": "Lightweight proxy for an edge in the graph",
       "constructor": {
@@ -254,7 +254,7 @@
       }
     },
     "NodeIterator": {
-      "import": "from propgraph import NodeIterator",
+      "import": "from propweaver import NodeIterator",
       "note": "Returned by PropertyGraph.nodes(). Supports method chaining and iteration.",
       "description": "Lazy iterator for XPath-style graph traversal",
       "constructor": {
@@ -330,7 +330,7 @@
       }
     },
     "EdgeIterator": {
-      "import": "from propgraph import EdgeIterator",
+      "import": "from propweaver import EdgeIterator",
       "note": "Returned by PropertyGraph.edges(). Supports method chaining and iteration.",
       "description": "Lazy iterator for edge operations",
       "constructor": {
@@ -391,7 +391,7 @@
   "query": {
     "description": "Declarative query representation. Advanced use only \u2014 most callers use the fluent API on NodeIterator/EdgeIterator instead.",
     "QueryStep": {
-      "import": "from propgraph import QueryStep",
+      "import": "from propweaver import QueryStep",
       "fields": {
         "type": {
           "type": "Literal['SOURCE', 'FILTER', 'TRAVERSE', 'ORDER', 'DELETE']",
@@ -432,7 +432,7 @@
       }
     },
     "QuerySpec": {
-      "import": "from propgraph import QuerySpec",
+      "import": "from propweaver import QuerySpec",
       "fields": {
         "steps": {
           "type": "List[QueryStep]",
@@ -475,8 +475,8 @@
     ]
   },
   "exceptions": {
-    "import": "from propgraph import <ExceptionClass>",
-    "hierarchy_root": "PropGraphError",
+    "import": "from propweaver import <ExceptionClass>",
+    "hierarchy_root": "PropWeaverError",
     "classes": {
       "DatabaseError": {
         "description": "Low-level database operation failed.\n\nSimilar to SQLAlchemy's DBAPIError - wraps underlying database\nerrors while preserving the original exception and SQL context.",
@@ -493,7 +493,7 @@
       "EntityError": {
         "description": "Base class for entity-related errors (nodes and edges).\n\nProvides common context for operations on graph entities.",
         "inherits": [
-          "PropGraphError"
+          "PropWeaverError"
         ]
       },
       "EntityNotFoundError": {
@@ -514,8 +514,8 @@
           "QueryError"
         ]
       },
-      "PropGraphError": {
-        "description": "Base exception for all PropGraph operations.\n\nSimilar to SQLAlchemy's SQLAlchemyError - provides the root of the exception\nhierarchy and basic context storage."
+      "PropWeaverError": {
+        "description": "Base exception for all PropWeaver operations.\n\nSimilar to SQLAlchemy's SQLAlchemyError - provides the root of the exception\nhierarchy and basic context storage."
       },
       "PropertyError": {
         "description": "Base class for property-related operations.\n\nProvides context about which property caused the error.",
@@ -540,7 +540,7 @@
       "QueryError": {
         "description": "Base class for query construction and execution errors.\n\nProvides context about the query that failed.",
         "inherits": [
-          "PropGraphError"
+          "PropWeaverError"
         ]
       },
       "QueryExecutionError": {
@@ -552,32 +552,32 @@
       "StatementError": {
         "description": "Error executing a graph operation or query.\n\nSimilar to SQLAlchemy's StatementError - provides context about the\noperation that failed, including operation type and parameters.",
         "inherits": [
-          "PropGraphError"
+          "PropWeaverError"
         ]
       },
       "TransactionError": {
         "description": "Transaction management error.\n\nIndicates problems with transaction state, rollback, or commit operations.",
         "inherits": [
-          "PropGraphError"
+          "PropWeaverError"
         ]
       },
       "ValidationError": {
         "description": "Data validation failed.\n\nIndicates that data doesn't meet expected constraints or formats.\nCan include multiple validation failures.",
         "inherits": [
-          "PropGraphError"
+          "PropWeaverError"
         ]
       }
     }
   },
   "api_models": {
-    "description": "Pydantic v2 models for validating PropGraph return values. Requires: pip install 'propgraph[api]'",
+    "description": "Pydantic v2 models for validating PropWeaver return values. Requires: pip install 'propweaver[api]'",
     "models": {
       "EdgeModel": {
-        "import": "from propgraph.api import EdgeModel",
-        "description": "Validated representation of a PropGraph edge.\n\nMirrors the data returned by :class:`~propgraph.EdgeProxy`.",
+        "import": "from propweaver.api import EdgeModel",
+        "description": "Validated representation of a PropWeaver edge.\n\nMirrors the data returned by :class:`~propweaver.EdgeProxy`.",
         "json_schema": {
           "additionalProperties": false,
-          "description": "Validated representation of a PropGraph edge.\n\nMirrors the data returned by :class:`~propgraph.EdgeProxy`.",
+          "description": "Validated representation of a PropWeaver edge.\n\nMirrors the data returned by :class:`~propweaver.EdgeProxy`.",
           "properties": {
             "edge_id": {
               "description": "Unique integer ID assigned by the database",
@@ -661,7 +661,7 @@
         }
       },
       "GraphStatsModel": {
-        "import": "from propgraph.api import GraphStatsModel",
+        "import": "from propweaver.api import GraphStatsModel",
         "description": "Resource usage statistics returned by ``PropertyGraph.resource_stats()``.\n\nAll counts reflect the state at the time of the call.",
         "json_schema": {
           "additionalProperties": false,
@@ -729,13 +729,13 @@
         }
       },
       "GraphSummaryModel": {
-        "import": "from propgraph.api import GraphSummaryModel",
+        "import": "from propweaver.api import GraphSummaryModel",
         "description": "Full graph summary returned by ``PropertyGraph.to_json()``.\n\nContains graph metadata, a sample of nodes and edges, and totals.",
         "json_schema": {
           "$defs": {
             "EdgeModel": {
               "additionalProperties": false,
-              "description": "Validated representation of a PropGraph edge.\n\nMirrors the data returned by :class:`~propgraph.EdgeProxy`.",
+              "description": "Validated representation of a PropWeaver edge.\n\nMirrors the data returned by :class:`~propweaver.EdgeProxy`.",
               "properties": {
                 "edge_id": {
                   "description": "Unique integer ID assigned by the database",
@@ -853,7 +853,7 @@
             },
             "NodeModel": {
               "additionalProperties": false,
-              "description": "Validated representation of a PropGraph node.\n\nMirrors the data returned by :class:`~propgraph.NodeProxy`.",
+              "description": "Validated representation of a PropWeaver node.\n\nMirrors the data returned by :class:`~propweaver.NodeProxy`.",
               "properties": {
                 "node_id": {
                   "description": "Unique integer ID assigned by the database",
@@ -996,7 +996,7 @@
         }
       },
       "GraphSummaryStatsModel": {
-        "import": "from propgraph.api import GraphSummaryStatsModel",
+        "import": "from propweaver.api import GraphSummaryStatsModel",
         "description": "Pagination summary embedded in ``GraphSummaryModel``.",
         "json_schema": {
           "additionalProperties": false,
@@ -1034,11 +1034,11 @@
         }
       },
       "NodeModel": {
-        "import": "from propgraph.api import NodeModel",
-        "description": "Validated representation of a PropGraph node.\n\nMirrors the data returned by :class:`~propgraph.NodeProxy`.",
+        "import": "from propweaver.api import NodeModel",
+        "description": "Validated representation of a PropWeaver node.\n\nMirrors the data returned by :class:`~propweaver.NodeProxy`.",
         "json_schema": {
           "additionalProperties": false,
-          "description": "Validated representation of a PropGraph node.\n\nMirrors the data returned by :class:`~propgraph.NodeProxy`.",
+          "description": "Validated representation of a PropWeaver node.\n\nMirrors the data returned by :class:`~propweaver.NodeProxy`.",
           "properties": {
             "node_id": {
               "description": "Unique integer ID assigned by the database",
@@ -1109,16 +1109,16 @@
           "type": "object"
         }
       },
-      "PropGraphAPIVersion": {
-        "import": "from propgraph.api import PropGraphAPIVersion",
-        "description": "Version metadata for the PropGraph public API.\n\nEmbed this in downstream projects to record which API version was\ntargeted when the integration was written, enabling change detection.",
+      "PropWeaverAPIVersion": {
+        "import": "from propweaver.api import PropWeaverAPIVersion",
+        "description": "Version metadata for the PropWeaver public API.\n\nEmbed this in downstream projects to record which API version was\ntargeted when the integration was written, enabling change detection.",
         "json_schema": {
           "additionalProperties": false,
-          "description": "Version metadata for the PropGraph public API.\n\nEmbed this in downstream projects to record which API version was\ntargeted when the integration was written, enabling change detection.",
+          "description": "Version metadata for the PropWeaver public API.\n\nEmbed this in downstream projects to record which API version was\ntargeted when the integration was written, enabling change detection.",
           "properties": {
-            "propgraph_version": {
-              "description": "propgraph package version string (e.g. '0.1.0')",
-              "title": "Propgraph Version",
+            "propweaver_version": {
+              "description": "propweaver package version string (e.g. '0.2.1')",
+              "title": "Propweaver Version",
               "type": "string"
             },
             "api_schema_version": {
@@ -1129,18 +1129,18 @@
             }
           },
           "required": [
-            "propgraph_version"
+            "propweaver_version"
           ],
-          "title": "PropGraphAPIVersion",
+          "title": "PropWeaverAPIVersion",
           "type": "object"
         }
       },
       "PropertyGraphConfig": {
-        "import": "from propgraph.api import PropertyGraphConfig",
-        "description": "Parameters accepted by the :class:`~propgraph.PropertyGraph` constructor.\n\nUse to validate configuration before opening a graph, or to document\ngraph instantiation in consuming projects.",
+        "import": "from propweaver.api import PropertyGraphConfig",
+        "description": "Parameters accepted by the :class:`~propweaver.PropertyGraph` constructor.\n\nUse to validate configuration before opening a graph, or to document\ngraph instantiation in consuming projects.",
         "json_schema": {
           "additionalProperties": false,
-          "description": "Parameters accepted by the :class:`~propgraph.PropertyGraph` constructor.\n\nUse to validate configuration before opening a graph, or to document\ngraph instantiation in consuming projects.",
+          "description": "Parameters accepted by the :class:`~propweaver.PropertyGraph` constructor.\n\nUse to validate configuration before opening a graph, or to document\ngraph instantiation in consuming projects.",
           "properties": {
             "db_path": {
               "anyOf": [
@@ -1174,13 +1174,13 @@
         }
       },
       "QuerySpecModel": {
-        "import": "from propgraph.api import QuerySpecModel",
-        "description": "Validated representation of a :class:`~propgraph.QuerySpec`.\n\nMirrors ``QuerySpec`` (a ``dataclass``) with full Pydantic validation.",
+        "import": "from propweaver.api import QuerySpecModel",
+        "description": "Validated representation of a :class:`~propweaver.QuerySpec`.\n\nMirrors ``QuerySpec`` (a ``dataclass``) with full Pydantic validation.",
         "json_schema": {
           "$defs": {
             "QueryStepModel": {
               "additionalProperties": false,
-              "description": "Validated representation of a single :class:`~propgraph.QueryStep`.\n\nMirrors ``QueryStep`` (a ``dataclass``) with full Pydantic validation.",
+              "description": "Validated representation of a single :class:`~propweaver.QueryStep`.\n\nMirrors ``QueryStep`` (a ``dataclass``) with full Pydantic validation.",
               "properties": {
                 "type": {
                   "description": "Operation type",
@@ -1297,7 +1297,7 @@
             }
           },
           "additionalProperties": false,
-          "description": "Validated representation of a :class:`~propgraph.QuerySpec`.\n\nMirrors ``QuerySpec`` (a ``dataclass``) with full Pydantic validation.",
+          "description": "Validated representation of a :class:`~propweaver.QuerySpec`.\n\nMirrors ``QuerySpec`` (a ``dataclass``) with full Pydantic validation.",
           "properties": {
             "steps": {
               "description": "Ordered sequence of query steps",
@@ -1338,11 +1338,11 @@
         }
       },
       "QueryStepModel": {
-        "import": "from propgraph.api import QueryStepModel",
-        "description": "Validated representation of a single :class:`~propgraph.QueryStep`.\n\nMirrors ``QueryStep`` (a ``dataclass``) with full Pydantic validation.",
+        "import": "from propweaver.api import QueryStepModel",
+        "description": "Validated representation of a single :class:`~propweaver.QueryStep`.\n\nMirrors ``QueryStep`` (a ``dataclass``) with full Pydantic validation.",
         "json_schema": {
           "additionalProperties": false,
-          "description": "Validated representation of a single :class:`~propgraph.QueryStep`.\n\nMirrors ``QueryStep`` (a ``dataclass``) with full Pydantic validation.",
+          "description": "Validated representation of a single :class:`~propweaver.QueryStep`.\n\nMirrors ``QueryStep`` (a ``dataclass``) with full Pydantic validation.",
           "properties": {
             "type": {
               "description": "Operation type",

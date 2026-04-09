@@ -1,6 +1,6 @@
-# PropGraph Examples
+# PropWeaver Examples
 
-This directory contains practical examples demonstrating how to use PropGraph for various use cases.
+This directory contains practical examples demonstrating how to use PropWeaver for various use cases.
 
 ## Running the Examples
 
@@ -90,6 +90,6 @@ These files persist after running the examples, so you can inspect the data or r
 
 After running these examples, you can:
 1. Modify the examples to match your specific use case
-2. Run the comprehensive test suite: `python3 tests/test_propgraph.py`
+2. Run the comprehensive test suite: `python3 tests/test_propweaver.py`
 3. Explore the API documentation in `CLAUDE.md`
-4. Build your own graph applications using PropGraph
+4. Build your own graph applications using PropWeaver

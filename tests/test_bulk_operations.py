@@ -1,5 +1,5 @@
 """
-Tests for PropGraph bulk operations and deletions.
+Tests for PropWeaver bulk operations and deletions.
 """
 
 import pytest

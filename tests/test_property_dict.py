@@ -13,12 +13,12 @@ class TestPropertyDictInterface:
     def test_graph_property_dict_access(self, graph):
         """Test dict-like access to graph properties"""
         # Set properties using dict interface
-        graph.props["project_name"] = "PropGraph"
+        graph.props["project_name"] = "PropWeaver"
         graph.props["version"] = "0.2.0"
         graph.props["active"] = True
 
         # Get properties using dict interface
-        assert graph.props["project_name"] == "PropGraph"
+        assert graph.props["project_name"] == "PropWeaver"
         assert graph.props["version"] == "0.2.0"
         assert graph.props["active"] == True
 
@@ -89,14 +89,14 @@ class TestPropertyDictDeletion:
     def test_delete_graph_property(self, graph):
         """Test deleting graph properties with del"""
         graph.props["temp_config"] = "test"
-        graph.props["project_name"] = "PropGraph"
+        graph.props["project_name"] = "PropWeaver"
 
         # Delete property
         del graph.props["temp_config"]
 
         # Verify deletion
         assert "temp_config" not in graph.props
-        assert graph.props["project_name"] == "PropGraph"
+        assert graph.props["project_name"] == "PropWeaver"
 
     def test_delete_nonexistent_property_raises_keyerror(self, graph):
         """Test that deleting non-existent property raises KeyError"""

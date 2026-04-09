@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# Test runner for PropGraph development (uv-compatible)
+# Test runner for PropWeaver development (uv-compatible)
 
 set -e  # Exit on error
 
-echo "=== PropGraph Test Suite ==="
+echo "=== PropWeaver Test Suite ==="
 
 # Ensure virtual environment exists
 if [ ! -d ".venv" ]; then
@@ -31,15 +31,15 @@ case "${1:-all}" in
         ;;
     "coverage")
         echo "Running tests with coverage..."
-        uv run pytest tests/ --cov=src/propgraph --cov-report=html --cov-report=term
+        uv run pytest tests/ --cov=src/propweaver --cov-report=html --cov-report=term
         ;;
     "comprehensive")
         echo "Running comprehensive test suite..."
-        uv run python3 tests/test_propgraph.py
+        uv run python3 tests/test_propweaver.py
         ;;
     "brief")
         echo "Running comprehensive test suite (brief output)..."
-        uv run python3 tests/test_propgraph.py --brief
+        uv run python3 tests/test_propweaver.py --brief
         ;;
     *)
         echo "Usage: $0 [all|fast|integration|coverage|comprehensive|brief]"

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Knowledge Graph Example for PropGraph
+Knowledge Graph Example for PropWeaver
 
 Demonstrates how to model and query a knowledge graph with programming languages,
 frameworks, and their relationships.
@@ -12,7 +12,7 @@ from pathlib import Path
 # Add src to Python path for examples
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
-from propgraph import PropertyGraph
+from propweaver import PropertyGraph
 
 
 def main():

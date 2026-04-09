@@ -1,18 +1,18 @@
 """
-Tests for PropGraph exception hierarchy and error handling.
+Tests for PropWeaver exception hierarchy and error handling.
 
 Tests the new SQLAlchemy-style exceptions with rich context for debugging.
 """
 
 import pytest
 
-from propgraph import PropertyGraph
-from propgraph.exceptions import (
+from propweaver import PropertyGraph
+from propweaver.exceptions import (
     EntityNotFoundError,
     InvalidQueryError,
     PropertyNotFoundError,
     PropertyValueError,
-    PropGraphError,
+    PropWeaverError,
 )
 
 
@@ -109,7 +109,7 @@ class TestQueryExceptions:
 
     def test_invalid_query_error_empty_query(self, graph):
         """Test InvalidQueryError with empty query"""
-        from propgraph.query import NodeIterator, QuerySpec
+        from propweaver.query import NodeIterator, QuerySpec
 
         # Create an iterator with no steps
         empty_spec = QuerySpec()
@@ -126,20 +126,20 @@ class TestQueryExceptions:
 class TestExceptionHierarchy:
     """Test exception inheritance and attributes"""
 
-    def test_propgraph_error_base_class(self):
-        """Test PropGraphError base class functionality"""
-        error = PropGraphError("Test message", test_attr="test_value", number=42)
+    def test_propweaver_error_base_class(self):
+        """Test PropWeaverError base class functionality"""
+        error = PropWeaverError("Test message", test_attr="test_value", number=42)
 
         assert str(error) == "Test message"
         assert error.test_attr == "test_value"
         assert error.number == 42
 
     def test_exception_inheritance(self):
-        """Test that all exceptions inherit from PropGraphError"""
-        assert issubclass(PropertyNotFoundError, PropGraphError)
-        assert issubclass(PropertyValueError, PropGraphError)
-        assert issubclass(InvalidQueryError, PropGraphError)
-        assert issubclass(EntityNotFoundError, PropGraphError)
+        """Test that all exceptions inherit from PropWeaverError"""
+        assert issubclass(PropertyNotFoundError, PropWeaverError)
+        assert issubclass(PropertyValueError, PropWeaverError)
+        assert issubclass(InvalidQueryError, PropWeaverError)
+        assert issubclass(EntityNotFoundError, PropWeaverError)
 
     def test_property_error_attributes(self, graph):
         """Test that PropertyError subclasses have expected attributes"""

@@ -1,7 +1,7 @@
 """
-PropGraph - A general-purpose property graph database library.
+PropWeaver - A general-purpose property graph database library.
 
-PropGraph provides a complete graph database implementation built on SQLite with:
+PropWeaver provides a complete graph database implementation built on SQLite with:
 - Nodes and edges with arbitrary properties
 - CRUD operations with bulk mutations
 - Transaction support with automatic rollback
@@ -9,7 +9,7 @@ PropGraph provides a complete graph database implementation built on SQLite with
 - Type-safe operations with comprehensive testing
 
 Example usage:
-    from propgraph import PropertyGraph
+    from propweaver import PropertyGraph
 
     with PropertyGraph("my_graph.db") as graph:
         # Create nodes and edges
@@ -32,7 +32,7 @@ from .exceptions import (
     InvalidQueryError,
     PropertyNotFoundError,
     PropertyValueError,
-    PropGraphError,
+    PropWeaverError,
     QueryExecutionError,
     TransactionError,
     ValidationError,
@@ -40,7 +40,7 @@ from .exceptions import (
 from .query import EdgeIterator, NodeIterator, QuerySpec, QueryStep
 from .logging_utils import SUMMARY, configure_for_tests, get_logger, set_log_level
 
-__version__ = "0.1.0"
+__version__ = "0.2.1"
 __all__ = [
     "PropertyGraph",
     "NodeProxy",
@@ -50,7 +50,7 @@ __all__ = [
     "QueryStep",
     "NodeIterator",
     "EdgeIterator",
-    "PropGraphError",
+    "PropWeaverError",
     "PropertyNotFoundError",
     "PropertyValueError",
     "EntityNotFoundError",

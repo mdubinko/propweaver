@@ -1,5 +1,5 @@
 """
-Query system for PropGraph - handles query building and execution.
+Query system for PropWeaver - handles query building and execution.
 
 This module contains the declarative query system including:
 - QuerySpec and QueryStep for query representation
